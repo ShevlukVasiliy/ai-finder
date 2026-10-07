@@ -1,0 +1,688 @@
+# Правила советов. Подстановки: {param} или {param:.2f}. effort — трудоёмкость 1..3.
+# expected_gain — априорная оценка, в отчёте пересчитывается контрфактически.
+rules:
+  - id: T-01.homoglyphs
+    detector: T-01
+    target: phrases
+    effort: 1
+    expected_gain: 10
+    autofix: true
+    ru:
+      title: "Латиница внутри русских слов (или наоборот)"
+      explain: "Найдено слов со смешанными алфавитами: {count}. Например: «{phrase}». Так обходят детекторы, и антиплагиат это ловит."
+      actions:
+        - "Нажмите «Очистить символы», чтобы заменить подменённые буквы."
+        - "Или перепечатайте выделенные слова вручную."
+    en:
+      title: "Mixed-alphabet words (homoglyphs)"
+      explain: "Words mixing alphabets: {count}, e.g. “{phrase}”. This is a known detector-evasion trick and plagiarism checkers flag it."
+      actions:
+        - "Press “Clean characters” to replace the substituted letters."
+        - "Or retype the highlighted words by hand."
+  - id: T-02.invisible
+    detector: T-02
+    target: phrases
+    effort: 1
+    expected_gain: 10
+    autofix: true
+    ru:
+      title: "Невидимые символы в тексте"
+      explain: "Найдено невидимых или служебных символов: {count} ({kinds})."
+      actions:
+        - "Нажмите «Очистить символы»: служебные символы удалятся, неразрывные пробелы станут обычными."
+    en:
+      title: "Invisible characters in the text"
+      explain: "Invisible or control characters found: {count} ({kinds})."
+      actions:
+        - "Press “Clean characters”: control characters are removed and odd non-breaking spaces become regular ones."
+  - id: T-03.perfect_typography
+    detector: T-03
+    target: phrases
+    effort: 1
+    expected_gain: 5
+    ru:
+      title: "Слишком «идеальная» типографика"
+      explain: "Длинных тире на 1000 слов: {value:.1f}, у живого текста обычно до {corridor_hi}. {extra}"
+      actions:
+        - "Замените часть тире на запятые, двоеточия или скобки."
+        - "Разбейте предложение с тире на два."
+        - "Многоточие «…» одним символом можно заменить на три точки."
+    en:
+      title: "Too “perfect” typography"
+      explain: "Em dashes per 1000 words: {value:.1f}; human text usually stays below {corridor_hi}. {extra}"
+      actions:
+        - "Replace most em dashes with commas, colons or parentheses."
+        - "Split sentences built around a dash into two."
+        - "Use three dots instead of the single “…” character."
+  - id: T-04.mixed_typography
+    detector: T-04
+    target: phrases
+    effort: 1
+    expected_gain: 1
+    ru:
+      title: "Смешаны разные кавычки или тире"
+      explain: "В тексте одновременно встречаются: {kinds}. Похоже на склейку из разных источников."
+      actions:
+        - "Приведите кавычки и тире к одному виду в своём стиле."
+    en:
+      title: "Mixed quotes or dashes"
+      explain: "The text mixes: {kinds}. Looks like it was pasted from several sources."
+      actions:
+        - "Pick one quote and dash style and stick to it."
+  - id: T-05.markdown
+    detector: T-05
+    target: phrases
+    effort: 1
+    expected_gain: 6
+    ru:
+      title: "Остались следы Markdown"
+      explain: "Найдено разметки Markdown: {count} (звёздочки, решётки, маркеры списков). Так выглядит ответ, скопированный из чата."
+      actions:
+        - "Уберите **звёздочки** и ### решётки, оформите текст обычными абзацами."
+        - "Списки перепишите связным текстом или оформьте средствами редактора."
+    en:
+      title: "Markdown leftovers"
+      explain: "Markdown marks found: {count} (asterisks, hashes, list bullets). This is what text copied from a chat looks like."
+      actions:
+        - "Remove **asterisks** and ### hashes, use plain paragraphs."
+        - "Turn bullet lists into connected prose or use real editor formatting."
+  - id: T-06.yo
+    detector: T-06
+    target: phrases
+    effort: 1
+    expected_gain: 1
+    ru:
+      title: "Слишком последовательная «ё»"
+      explain: "«Ё» стоит во всех {count} возможных местах. Люди обычно пишут «е» хотя бы иногда."
+      actions:
+        - "Если пишете «е» по привычке, так и оставьте. Не расставляйте «ё» везде специально."
+    en:
+      title: "Overly consistent «ё»"
+      explain: "Russian «ё» is used in all {count} possible places."
+      actions:
+        - "Humans are usually inconsistent with «ё»; do not force it everywhere."
+  - id: R-01.low_burstiness
+    detector: R-01
+    target: sentences
+    effort: 2
+    expected_gain: 8
+    ru:
+      title: "Предложения слишком одинаковой длины"
+      explain: "Коэффициент вариации {value:.2f}, у живого текста обычно больше 0.5."
+      actions:
+        - "Разбейте самое длинное предложение в абзаце {para} на 2–3 коротких."
+        - "Добавьте 1–2 предложения из 3–5 слов: реакция, вывод, вопрос."
+        - "Объедините пару соседних средних предложений через тире или «потому что»."
+    en:
+      title: "Sentences are too uniform in length"
+      explain: "Coefficient of variation is {value:.2f}; human writing is usually above 0.5."
+      actions:
+        - "Split the longest sentence in paragraph {para} into 2–3 short ones."
+        - "Add 1–2 sentences of 3–5 words: a reaction, a takeaway, a question."
+        - "Merge a pair of neighbouring mid-length sentences with a dash or “because”."
+  - id: R-02.no_extremes
+    detector: R-02
+    target: sentences
+    effort: 2
+    expected_gain: 5
+    ru:
+      title: "Нет очень коротких и очень длинных предложений"
+      explain: "Доля предложений короче 6 или длиннее 34 слов: {value:.0%}. У людей обычно 15–45 %."
+      actions:
+        - "Вставьте пару рубленых фраз: «Не сработало.», «Вот и всё.»"
+        - "Позвольте себе одно длинное предложение с перечислением или отступлением."
+    en:
+      title: "No very short or very long sentences"
+      explain: "Share of sentences under 6 or over 34 words: {value:.0%}. Humans typically land at 15–45%."
+      actions:
+        - "Drop in a couple of punchy fragments: “Didn't work.”, “That's it.”"
+        - "Allow yourself one long, rambling sentence with an aside."
+  - id: R-03.uniform_paragraphs
+    detector: R-03
+    target: paragraphs
+    effort: 2
+    expected_gain: 4
+    ru:
+      title: "Абзацы одинакового размера"
+      explain: "Вариация длин абзацев {value:.2f}; абзацев по 3–4 предложения: {extra}."
+      actions:
+        - "Сделайте один абзац из одного-двух предложений."
+        - "Объедините два соседних абзаца, если они про одно и то же."
+    en:
+      title: "Paragraphs are all the same size"
+      explain: "Paragraph length variation {value:.2f}; paragraphs of 3–4 sentences: {extra}."
+      actions:
+        - "Make one paragraph just one or two sentences long."
+        - "Merge two neighbouring paragraphs if they cover the same point."
+  - id: R-04.rhythm
+    detector: R-04
+    target: sentences
+    effort: 2
+    expected_gain: 2
+    ru:
+      title: "Повторяющийся ритм предложений"
+      explain: "Длины предложений повторяются с периодом {lag} (автокорреляция {value:.2f})."
+      actions:
+        - "Поменяйте порядок предложений или сломайте ритм вставкой короткой фразы."
+    en:
+      title: "Repeating sentence rhythm"
+      explain: "Sentence lengths repeat with period {lag} (autocorrelation {value:.2f})."
+      actions:
+        - "Reorder sentences or break the pattern with a short interjection."
+  - id: R-05.openings
+    detector: R-05
+    target: sentences
+    effort: 1
+    expected_gain: 3
+    ru:
+      title: "Предложения начинаются одинаково"
+      explain: "Слово «{phrase}» открывает {value:.0%} предложений."
+      actions:
+        - "Начните пару предложений с обстоятельства, вопроса или цитаты."
+        - "Переставьте подлежащее в середину предложения."
+    en:
+      title: "Sentences start the same way"
+      explain: "“{phrase}” opens {value:.0%} of sentences."
+      actions:
+        - "Start a few sentences with a time phrase, a question or a quote."
+        - "Move the subject into the middle of the sentence."
+  - id: L-01.markers
+    detector: L-01
+    target: phrases
+    effort: 1
+    expected_gain: 10
+    ru:
+      title: "Типичные для ИИ слова и обороты"
+      explain: "Плотность маркеров {value:.1f} на 1000 слов. Например: «{phrase}»."
+      actions:
+        - "Удалите вводные вроде «важно отметить» — смысл не пострадает."
+        - "Замените штампы своими словами: {replace}."
+    en:
+      title: "Typical AI words and phrases"
+      explain: "Marker density {value:.1f} per 1000 words, e.g. “{phrase}”."
+      actions:
+        - "Delete filler like “it's important to note” — the meaning survives."
+        - "Swap clichés for plain words: {replace}."
+  - id: L-02.flat_diversity
+    detector: L-02
+    target: none
+    effort: 3
+    expected_gain: 2
+    ru:
+      title: "Слишком ровное лексическое разнообразие"
+      explain: "Разнообразие слов почти не меняется по тексту (CV окон MATTR {value:.3f})."
+      actions:
+        - "Добавьте фрагмент, где вы говорите проще и повторяетесь, и фрагмент с редкими терминами."
+    en:
+      title: "Lexical diversity is suspiciously flat"
+      explain: "Word variety barely changes across the text (MATTR window CV {value:.3f})."
+      actions:
+        - "Add a passage where you speak plainly and repeat yourself, and one with niche terms."
+  - id: L-03.thin_tail
+    detector: L-03
+    target: none
+    effort: 3
+    expected_gain: 2
+    ru:
+      title: "Мало редких и уникальных слов"
+      explain: "Доля слов, встреченных один раз: {value:.2f}. У живого текста хвост богаче."
+      actions:
+        - "Добавьте конкретику: названия, цифры, профессиональный жаргон, местные словечки."
+    en:
+      title: "Few rare, one-off words"
+      explain: "Share of words used once: {value:.2f}. Human text has a richer tail."
+      actions:
+        - "Add specifics: names, numbers, jargon, regional words."
+  - id: L-04.hedging
+    detector: L-04
+    target: phrases
+    effort: 2
+    expected_gain: 4
+    ru:
+      title: "Много хеджирования и канцелярита"
+      explain: "Оговорки, пассив и отглагольные существительные: {value:.0f} на 1000 слов. Например: «{phrase}»."
+      actions:
+        - "Уберите «может», «как правило», «в некоторой степени» там, где вы уверены."
+        - "Замените «осуществление проверки» на «проверить»."
+    en:
+      title: "Too much hedging and officialese"
+      explain: "Hedges, passives and nominalisations: {value:.0f} per 1000 words, e.g. “{phrase}”."
+      actions:
+        - "Drop “potentially”, “generally”, “to some extent” where you are actually sure."
+        - "Turn “perform an evaluation of” into “evaluate”."
+  - id: L-05.no_noise
+    detector: L-05
+    target: none
+    effort: 2
+    expected_gain: 8
+    ru:
+      title: "Нет «человеческого шума»"
+      explain: "Разговорные частицы, личный опыт, даты и имена: {value:.0f} на 1000 слов. У людей обычно {corridor_lo}+."
+      actions:
+        - "Добавьте личный опыт: «я пробовал…», «у нас в команде…»."
+        - "Вставьте конкретную дату, имя или место."
+        - "Разрешите себе частицы «ну», «вот», «же» и риторический вопрос."
+    en:
+      title: "No “human noise”"
+      explain: "Colloquialisms, personal experience, dates and names: {value:.0f} per 1000 words. Humans usually show {corridor_lo}+."
+      actions:
+        - "Add personal experience: “I tried…”, “on our team…”."
+        - "Mention a concrete date, name or place."
+        - "Allow yourself contractions, “honestly”, “well”, a rhetorical question."
+  - id: L-06.ngrams
+    detector: L-06
+    target: phrases
+    effort: 2
+    expected_gain: 3
+    ru:
+      title: "Повторяющиеся словосочетания"
+      explain: "Повторов 3–5-грамм: {count}. Например: «{phrase}»."
+      actions:
+        - "Перефразируйте повторы или замените их местоимениями."
+    en:
+      title: "Repeated word sequences"
+      explain: "Repeated 3–5-grams: {count}, e.g. “{phrase}”."
+      actions:
+        - "Rephrase the repeats or use pronouns instead."
+  - id: S-01.template
+    detector: S-01
+    target: paragraphs
+    effort: 3
+    expected_gain: 6
+    ru:
+      title: "Шаблон «вступление → пункты → вывод»"
+      explain: "Структура текста повторяет типовой ответ чат-бота: {extra}."
+      actions:
+        - "Начните сразу с сути или с истории, без общего вступления."
+        - "Уберите финальный абзац «В заключение…» или закончите конкретным действием."
+    en:
+      title: "Intro → bullet points → conclusion template"
+      explain: "The structure mirrors a typical chatbot answer: {extra}."
+      actions:
+        - "Open with the point or a story, not a generic intro."
+        - "Drop the “In conclusion…” paragraph or end with a concrete next step."
+  - id: S-02.triads
+    detector: S-02
+    target: phrases
+    effort: 1
+    expected_gain: 4
+    ru:
+      title: "Слишком много перечислений по три"
+      explain: "Триад «A, B и C»: {count} ({value:.1f} на 1000 слов). Например: «{phrase}»."
+      actions:
+        - "Оставьте два элемента или добавьте четвёртый."
+        - "Разверните одно из перечислений в отдельное предложение с примером."
+    en:
+      title: "Too many lists of three"
+      explain: "“A, B and C” triplets: {count} ({value:.1f} per 1000 words), e.g. “{phrase}”."
+      actions:
+        - "Keep two items or add a fourth."
+        - "Expand one list into its own sentence with an example."
+  - id: S-03.headings
+    detector: S-03
+    target: phrases
+    effort: 1
+    expected_gain: 3
+    ru:
+      title: "Шаблонные заголовки"
+      explain: "Заголовки вроде «{phrase}» типичны для сгенерированных текстов."
+      actions:
+        - "Назовите разделы по содержанию: не «Преимущества», а «Почему мы перешли на X»."
+    en:
+      title: "Template headings"
+      explain: "Headings like “{phrase}” are typical for generated text."
+      actions:
+        - "Name sections by content: not “Benefits” but “Why we moved to X”."
+        - "Avoid Title Case: With Colons headings."
+  - id: S-04.uniform_lists
+    detector: S-04
+    target: phrases
+    effort: 2
+    expected_gain: 3
+    ru:
+      title: "Все пункты списка устроены одинаково"
+      explain: "{value:.0%} пунктов имеют вид «Термин: пояснение»."
+      actions:
+        - "Сделайте пункты разной длины и формы, часть превратите в текст."
+    en:
+      title: "All list items share one shape"
+      explain: "{value:.0%} of list items follow “Term: explanation”."
+      actions:
+        - "Vary item length and form; turn some into prose."
+  - id: S-05.summary_endings
+    detector: S-05
+    target: sentences
+    effort: 2
+    expected_gain: 3
+    ru:
+      title: "Абзацы заканчиваются пересказом"
+      explain: "В {value:.0%} абзацев последнее предложение повторяет первое или подводит итог."
+      actions:
+        - "Удалите последнее предложение абзаца {para} — оно ничего не добавляет."
+    en:
+      title: "Paragraphs end with a recap"
+      explain: "In {value:.0%} of paragraphs the last sentence restates the first or summarises."
+      actions:
+        - "Delete the last sentence of paragraph {para} — it adds nothing."
+  - id: S-06.contrast
+    detector: S-06
+    target: phrases
+    effort: 1
+    expected_gain: 3
+    ru:
+      title: "Частая конструкция «не X, а Y»"
+      explain: "Противопоставлений: {count}. Например: «{phrase}»."
+      actions:
+        - "Скажите прямо, что есть Y, без отрицания X."
+    en:
+      title: "Frequent “not just X, it's Y”"
+      explain: "Contrast constructions: {count}, e.g. “{phrase}”."
+      actions:
+        - "Just say what Y is without negating X first."
+  - id: P-01.low_perplexity
+    detector: P-01
+    target: sentences
+    effort: 3
+    expected_gain: 3
+    ru:
+      title: "Слишком предсказуемый и ровный текст"
+      explain: "Перплексия по n-граммной модели почти одинакова во всех предложениях (CV {value:.2f})."
+      actions:
+        - "Используйте неожиданные сравнения и конкретные детали."
+        - "Перепишите самые «гладкие» предложения своими словами."
+    en:
+      title: "Too predictable and even"
+      explain: "N-gram perplexity is almost the same across sentences (CV {value:.2f})."
+      actions:
+        - "Use unexpected comparisons and concrete details."
+        - "Rewrite the smoothest sentences in your own words."
+  - id: P-02.compressible
+    detector: P-02
+    target: none
+    effort: 3
+    expected_gain: 2
+    ru:
+      title: "Текст слишком хорошо сжимается"
+      explain: "Коэффициент сжатия {value:.3f}: в тексте много повторяющихся конструкций."
+      actions:
+        - "Сократите повторяющиеся обороты и связки."
+    en:
+      title: "Text compresses too well"
+      explain: "Compression ratio {value:.3f}: lots of repeated constructions."
+      actions:
+        - "Cut repeated phrases and connectors."
+  - id: D-01.metadata
+    detector: D-01
+    target: none
+    effort: 1
+    expected_gain: 8
+    ru:
+      title: "Подозрительные метаданные документа"
+      explain: "{extra}"
+      actions:
+        - "Пересохраните документ в Word или LibreOffice («Сохранить как»)."
+        - "Проверьте свойства файла: автор, приложение, даты."
+    en:
+      title: "Suspicious document metadata"
+      explain: "{extra}"
+      actions:
+        - "Re-save the document in Word or LibreOffice (“Save as”)."
+        - "Check file properties: author, application, dates."
+  - id: D-02.edit_time
+    detector: D-02
+    target: none
+    effort: 1
+    expected_gain: 5
+    ru:
+      title: "Слишком мало времени на редактирование"
+      explain: "{extra}"
+      actions:
+        - "Это видно в свойствах файла. Работайте в одном документе, а не вставляйте готовый текст в новый."
+    en:
+      title: "Too little editing time"
+      explain: "{extra}"
+      actions:
+        - "File properties reveal this. Work in one document rather than pasting finished text into a new one."
+  - id: D-03.paste
+    detector: D-03
+    target: none
+    effort: 2
+    expected_gain: 4
+    ru:
+      title: "Текст вставлен одним куском"
+      explain: "{extra}"
+      actions:
+        - "Правьте документ по частям в разных сессиях: так появятся естественные следы редактирования."
+    en:
+      title: "Text pasted in one go"
+      explain: "{extra}"
+      actions:
+        - "Edit the document in parts across sessions to leave natural revision traces."
+  - id: D-04.chat_format
+    detector: D-04
+    target: none
+    effort: 1
+    expected_gain: 4
+    ru:
+      title: "Форматирование, скопированное из чата"
+      explain: "{extra}"
+      actions:
+        - "Очистите форматирование (Ctrl+Space) и примените стили документа."
+    en:
+      title: "Formatting copied from a chat"
+      explain: "{extra}"
+      actions:
+        - "Clear formatting and apply the document's own styles."
+  - id: I-01.c2pa
+    detector: I-01
+    target: none
+    effort: 1
+    expected_gain: 25
+    ru:
+      title: "Найден манифест Content Credentials (C2PA)"
+      explain: "{extra}"
+      actions:
+        - "Манифест прямо указывает происхождение. Если изображение ваше, экспортируйте оригинал с камеры."
+    en:
+      title: "Content Credentials (C2PA) manifest found"
+      explain: "{extra}"
+      actions:
+        - "The manifest states the origin. If the image is yours, export the camera original."
+  - id: I-02.metadata
+    detector: I-02
+    target: none
+    effort: 1
+    expected_gain: 15
+    ru:
+      title: "Метаданные указывают на генератор"
+      explain: "{extra}"
+      actions:
+        - "Удалите PNG-чанки parameters/workflow и поле Software (exiftool -all=)."
+    en:
+      title: "Metadata points to a generator"
+      explain: "{extra}"
+      actions:
+        - "Strip PNG parameters/workflow chunks and the Software tag (exiftool -all=)."
+  - id: I-03.dimensions
+    detector: I-03
+    target: none
+    effort: 1
+    expected_gain: 3
+    ru:
+      title: "Типичный для генераторов размер"
+      explain: "Размер {extra} характерен для нейросетей."
+      actions:
+        - "Это слабый признак. Обрезка до нестандартного размера уберёт его."
+    en:
+      title: "Generator-typical dimensions"
+      explain: "Size {extra} is typical for image generators."
+      actions:
+        - "A weak signal; cropping to a non-standard size removes it."
+  - id: I-04.spectrum
+    detector: I-04
+    target: none
+    effort: 3
+    expected_gain: 2
+    ru:
+      title: "Периодические артефакты в спектре"
+      explain: "Пики в спектре FFT в {value:.1f} раза выше медианы. Это признак апсемплинга."
+      actions:
+        - "Вероятностный признак. Ручные правки его не уберут."
+    en:
+      title: "Periodic spectral artefacts"
+      explain: "FFT peaks are {value:.1f}× the median, a sign of upsampling."
+      actions:
+        - "Probabilistic signal; manual edits will not remove it."
+  - id: I-05.noise
+    detector: I-05
+    target: none
+    effort: 3
+    expected_gain: 2
+    ru:
+      title: "Нет естественного шума сенсора"
+      explain: "Слишком гладких областей: {value:.0%}."
+      actions:
+        - "Вероятностный признак. Фото с камеры обычно имеет зернистость."
+    en:
+      title: "No natural sensor noise"
+      explain: "Overly smooth regions: {value:.0%}."
+      actions:
+        - "Probabilistic signal; camera photos usually have grain."
+  - id: I-06.jpeg
+    detector: I-06
+    target: none
+    effort: 3
+    expected_gain: 1
+    ru:
+      title: "Нетипичная история JPEG"
+      explain: "{extra}"
+      actions:
+        - "Слабый признак, справочно."
+    en:
+      title: "Unusual JPEG history"
+      explain: "{extra}"
+      actions:
+        - "Weak signal, informational."
+  - id: I-07.watermark
+    detector: I-07
+    target: none
+    effort: 3
+    expected_gain: 10
+    ru:
+      title: "Похоже на невидимый водяной знак"
+      explain: "Коэффициенты DWT-DCT квантованы по схеме invisible-watermark (сила {value:.2f}). SynthID проверить невозможно."
+      actions:
+        - "Водяной знак ставит генератор. Это сильный признак происхождения."
+    en:
+      title: "Looks like an invisible watermark"
+      explain: "DWT-DCT coefficients are quantised like invisible-watermark (strength {value:.2f}). SynthID cannot be checked."
+      actions:
+        - "The generator embeds this watermark; it is a strong origin signal."
+  - id: C-01.comments
+    detector: C-01
+    target: phrases
+    effort: 1
+    expected_gain: 6
+    ru:
+      title: "Комментарии в стиле ИИ"
+      explain: "{extra}"
+      actions:
+        - "Удалите комментарии, которые пересказывают код («# Increment counter»)."
+        - "Уберите нумерацию «Step 1:» и docstring у тривиальных функций."
+    en:
+      title: "AI-style comments"
+      explain: "{extra}"
+      actions:
+        - "Delete comments that restate the code (“# Increment counter”)."
+        - "Remove “Step 1:” numbering and docstrings on trivial functions."
+  - id: C-02.naming
+    detector: C-02
+    target: none
+    effort: 2
+    expected_gain: 2
+    ru:
+      title: "Имена слишком «словарные»"
+      explain: "{value:.0%} идентификаторов — полные словарные слова без сокращений."
+      actions:
+        - "Используйте привычные в команде сокращения: cfg, idx, resp."
+    en:
+      title: "Names are too dictionary-like"
+      explain: "{value:.0%} of identifiers are full dictionary words without abbreviations."
+      actions:
+        - "Use your team's usual abbreviations: cfg, idx, resp."
+  - id: C-03.boilerplate
+    detector: C-03
+    target: phrases
+    effort: 2
+    expected_gain: 4
+    ru:
+      title: "Шаблонная структура кода"
+      explain: "{extra}"
+      actions:
+        - "Уберите try/except вокруг всего и эмодзи в логах."
+    en:
+      title: "Boilerplate code structure"
+      explain: "{extra}"
+      actions:
+        - "Remove catch-all try/except and emoji in logs."
+  - id: C-04.style
+    detector: C-04
+    target: none
+    effort: 3
+    expected_gain: 1
+    ru:
+      title: "Слишком идеальный стиль"
+      explain: "{extra}"
+      actions:
+        - "Слабый признак: проверьте, совпадает ли стиль с остальным проектом."
+    en:
+      title: "Too-perfect style"
+      explain: "{extra}"
+      actions:
+        - "Weak signal: check it matches the rest of the project."
+  - id: C-05.chat_markers
+    detector: C-05
+    target: phrases
+    effort: 1
+    expected_gain: 10
+    ru:
+      title: "Остатки ответа чат-бота"
+      explain: "Найдено: «{phrase}»."
+      actions:
+        - "Удалите фразы вроде «Here's the updated code» и плейсхолдеры your_api_key_here."
+    en:
+      title: "Chatbot answer leftovers"
+      explain: "Found: “{phrase}”."
+      actions:
+        - "Remove phrases like “Here's the updated code” and your_api_key_here placeholders."
+combos:
+  - id: combo.too_even
+    detectors: [R-01, R-03, S-01]
+    min: 2
+    effort: 3
+    ru:
+      title: "Текст слишком ровный по структуре"
+      explain: "Одинаковые предложения, одинаковые абзацы и шаблонная композиция: {members}."
+      actions:
+        - "Перестройте текст: начните с примера, сделайте один абзац коротким, а другой длинным."
+        - "Смешайте короткие и длинные предложения и уберите итоговый абзац."
+    en:
+      title: "The text is structurally too even"
+      explain: "Uniform sentences, uniform paragraphs and a template layout: {members}."
+      actions:
+        - "Restructure: open with an example, make one paragraph short and another long."
+        - "Mix short and long sentences, drop the summary paragraph."
+  - id: combo.chat_paste
+    detectors: [T-05, S-03, S-04, D-04]
+    min: 2
+    effort: 1
+    ru:
+      title: "Текст выглядит как вставка из чата"
+      explain: "Разметка, шаблонные заголовки и одинаковые пункты: {members}."
+      actions:
+        - "Уберите разметку и заголовки и перепишите пункты абзацами."
+    en:
+      title: "Looks like a chat paste"
+      explain: "Markup, template headings and uniform items: {members}."
+      actions:
+        - "Remove markup and headings, rewrite bullet items as paragraphs."

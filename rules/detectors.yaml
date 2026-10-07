@@ -1,0 +1,381 @@
+# Справочник детекторов. lo/hi — пороги нормализации основной метрики в [0,1]
+# (direction: up — чем больше метрика, тем больше похоже на ИИ; down — наоборот).
+# corridor — «человеческий коридор» метрики для UI. weight — априорный вес до калибровки.
+- id: T-01
+  category: typography
+  kind: text
+  weight: 1.5
+  metric: mixed_words
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 2 }, en: { lo: 0, hi: 2 } }
+  corridor: { ru: [0, 0], en: [0, 0] }
+  name: { ru: "Подмена символов (гомоглифы)", en: "Homoglyph substitution" }
+- id: T-02
+  category: typography
+  kind: text
+  weight: 1.5
+  metric: invisible_chars
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 3 }, en: { lo: 0, hi: 3 } }
+  corridor: { ru: [0, 0], en: [0, 0] }
+  name: { ru: "Невидимые символы", en: "Invisible characters" }
+- id: T-03
+  category: typography
+  kind: text
+  weight: 1.0
+  metric: em_dash_per_1000
+  direction: up
+  thresholds: { ru: { lo: 6, hi: 22 }, en: { lo: 1, hi: 9 } }
+  corridor: { ru: [0, 8], en: [0, 2] }
+  name: { ru: "«Идеальная» типографика", en: "\"Perfect\" typography" }
+- id: T-04
+  category: typography
+  kind: text
+  weight: 0.2
+  metric: mixed_styles
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 2 }, en: { lo: 0, hi: 2 } }
+  corridor: { ru: [0, 1], en: [0, 1] }
+  name: { ru: "Смешение типографики", en: "Mixed typography" }
+- id: T-05
+  category: typography
+  kind: text
+  weight: 1.0
+  metric: markdown_marks
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 4 }, en: { lo: 0, hi: 4 } }
+  corridor: { ru: [0, 0], en: [0, 0] }
+  name: { ru: "Следы Markdown", en: "Markdown leftovers" }
+- id: T-06
+  category: typography
+  kind: text
+  weight: 0.3
+  metric: yo_ratio
+  direction: up
+  thresholds: { ru: { lo: 0.5, hi: 1 }, en: { lo: 0, hi: 1 } }
+  corridor: { ru: [0, 0.6], en: [0, 1] }
+  name: { ru: "Буква «ё»", en: "Letter «ё» (RU only)" }
+- id: R-01
+  category: style
+  kind: text
+  weight: 2.0
+  metric: sentence_cv
+  direction: down
+  thresholds: { ru: { lo: 0.35, hi: 0.6 }, en: { lo: 0.35, hi: 0.6 } }
+  corridor: { ru: [0.5, 0.9], en: [0.5, 0.9] }
+  name: { ru: "Burstiness длин предложений", en: "Sentence length burstiness" }
+- id: R-02
+  category: style
+  kind: text
+  weight: 1.2
+  metric: extreme_share
+  direction: down
+  thresholds: { ru: { lo: 0.04, hi: 0.2 }, en: { lo: 0.04, hi: 0.2 } }
+  corridor: { ru: [0.15, 0.45], en: [0.15, 0.45] }
+  name: { ru: "Очень короткие и длинные предложения", en: "Very short and long sentences" }
+- id: R-03
+  category: style
+  kind: text
+  weight: 1.0
+  metric: paragraph_cv
+  direction: down
+  thresholds: { ru: { lo: 0.2, hi: 0.5 }, en: { lo: 0.2, hi: 0.5 } }
+  corridor: { ru: [0.4, 1.0], en: [0.4, 1.0] }
+  name: { ru: "Однородность абзацев", en: "Paragraph uniformity" }
+- id: R-04
+  category: style
+  kind: text
+  weight: 0.5
+  metric: rhythm_autocorr
+  direction: up
+  thresholds: { ru: { lo: 0.15, hi: 0.6 }, en: { lo: 0.15, hi: 0.6 } }
+  corridor: { ru: [-0.3, 0.2], en: [-0.3, 0.2] }
+  name: { ru: "Повторяющийся ритм", en: "Repeating rhythm" }
+- id: R-05
+  category: style
+  kind: text
+  weight: 0.6
+  metric: start_repeat
+  direction: up
+  thresholds: { ru: { lo: 0.15, hi: 0.4 }, en: { lo: 0.2, hi: 0.45 } }
+  corridor: { ru: [0, 0.15], en: [0, 0.2] }
+  name: { ru: "Однотипные начала предложений", en: "Repetitive sentence openings" }
+- id: L-01
+  category: lexicon
+  kind: text
+  weight: 2.5
+  metric: marker_density
+  direction: up
+  thresholds: { ru: { lo: 1, hi: 12 }, en: { lo: 1, hi: 12 } }
+  corridor: { ru: [0, 2], en: [0, 2] }
+  name: { ru: "Маркеры ИИ-лексики", en: "AI vocabulary markers" }
+- id: L-02
+  category: lexicon
+  kind: text
+  weight: 0.6
+  metric: mattr_cv
+  direction: down
+  thresholds: { ru: { lo: 0.03, hi: 0.08 }, en: { lo: 0.03, hi: 0.08 } }
+  corridor: { ru: [0.06, 0.15], en: [0.06, 0.15] }
+  name: { ru: "Ровное лексическое разнообразие", en: "Flat lexical diversity" }
+- id: L-03
+  category: lexicon
+  kind: text
+  weight: 0.6
+  metric: hapax_ratio
+  direction: down
+  thresholds: { ru: { lo: 0.6, hi: 0.8 }, en: { lo: 0.5, hi: 0.72 } }
+  corridor: { ru: [0.72, 0.95], en: [0.62, 0.9] }
+  name: { ru: "Бедный хвост редких слов", en: "Thin tail of rare words" }
+- id: L-04
+  category: lexicon
+  kind: text
+  weight: 1.0
+  metric: hedge_density
+  direction: up
+  thresholds: { ru: { lo: 40, hi: 110 }, en: { lo: 30, hi: 90 } }
+  corridor: { ru: [0, 50], en: [0, 40] }
+  name: { ru: "Хеджирование и канцелярит", en: "Hedging and officialese" }
+- id: L-05
+  category: lexicon
+  kind: text
+  weight: 2.0
+  metric: noise_density
+  direction: down
+  thresholds: { ru: { lo: 8, hi: 40 }, en: { lo: 10, hi: 50 } }
+  corridor: { ru: [25, 120], en: [30, 140] }
+  name: { ru: "Нет «человеческого шума»", en: "No \"human noise\"" }
+- id: L-06
+  category: lexicon
+  kind: text
+  weight: 0.6
+  metric: ngram_repeats
+  direction: up
+  thresholds: { ru: { lo: 2, hi: 12 }, en: { lo: 3, hi: 15 } }
+  corridor: { ru: [0, 4], en: [0, 5] }
+  name: { ru: "Повторы n-грамм", en: "Repeated n-grams" }
+- id: S-01
+  category: structure
+  kind: text
+  weight: 1.2
+  metric: template_score
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 1 }, en: { lo: 0, hi: 1 } }
+  corridor: { ru: [0, 0.3], en: [0, 0.3] }
+  name: { ru: "Шаблон «вступление → пункты → вывод»", en: "Intro → points → conclusion template" }
+- id: S-02
+  category: structure
+  kind: text
+  weight: 1.0
+  metric: triads_per_1000
+  direction: up
+  thresholds: { ru: { lo: 2, hi: 10 }, en: { lo: 2, hi: 10 } }
+  corridor: { ru: [0, 3], en: [0, 3] }
+  name: { ru: "Триады перечислений", en: "Triplet lists" }
+- id: S-03
+  category: structure
+  kind: text
+  weight: 0.6
+  metric: template_headings
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 3 }, en: { lo: 0, hi: 3 } }
+  corridor: { ru: [0, 0], en: [0, 0] }
+  name: { ru: "Шаблонные заголовки", en: "Template headings" }
+- id: S-04
+  category: structure
+  kind: text
+  weight: 0.7
+  metric: uniform_list_share
+  direction: up
+  thresholds: { ru: { lo: 0.5, hi: 1 }, en: { lo: 0.5, hi: 1 } }
+  corridor: { ru: [0, 0.5], en: [0, 0.5] }
+  name: { ru: "Пункты одинаковой структуры", en: "Uniform list items" }
+- id: S-05
+  category: structure
+  kind: text
+  weight: 0.7
+  metric: summary_endings
+  direction: up
+  thresholds: { ru: { lo: 0.1, hi: 0.5 }, en: { lo: 0.1, hi: 0.5 } }
+  corridor: { ru: [0, 0.15], en: [0, 0.15] }
+  name: { ru: "Резюмирующие концовки абзацев", en: "Summarising paragraph endings" }
+- id: S-06
+  category: structure
+  kind: text
+  weight: 0.8
+  metric: contrast_per_1000
+  direction: up
+  thresholds: { ru: { lo: 1, hi: 6 }, en: { lo: 0.5, hi: 5 } }
+  corridor: { ru: [0, 2], en: [0, 1] }
+  name: { ru: "Конструкция «не X, а Y»", en: "\"Not just X, it's Y\"" }
+- id: P-01
+  category: stats
+  kind: text
+  weight: 1.0
+  metric: perplexity_cv
+  direction: down
+  thresholds: { ru: { lo: 0.08, hi: 0.2 }, en: { lo: 0.08, hi: 0.2 } }
+  corridor: { ru: [0.15, 0.4], en: [0.15, 0.4] }
+  name: { ru: "Псевдо-перплексия (n-граммы)", en: "Pseudo-perplexity (n-grams)" }
+- id: P-02
+  category: stats
+  kind: text
+  weight: 0.8
+  metric: compression_ratio
+  direction: down
+  thresholds: { ru: { lo: 0.3, hi: 0.4 }, en: { lo: 0.36, hi: 0.46 } }
+  corridor: { ru: [0.36, 0.5], en: [0.42, 0.55] }
+  name: { ru: "Сжимаемость", en: "Compressibility" }
+- id: D-01
+  category: metadata
+  kind: document
+  weight: 2.0
+  metric: meta_flags
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 2 }, en: { lo: 0, hi: 2 } }
+  corridor: { ru: [0, 0], en: [0, 0] }
+  name: { ru: "Метаданные документа", en: "Document metadata" }
+- id: D-02
+  category: metadata
+  kind: document
+  weight: 1.5
+  metric: words_per_minute
+  direction: up
+  thresholds: { ru: { lo: 60, hi: 400 }, en: { lo: 60, hi: 400 } }
+  corridor: { ru: [0, 40], en: [0, 40] }
+  name: { ru: "Время редактирования", en: "Editing time" }
+- id: D-03
+  category: metadata
+  kind: document
+  weight: 1.2
+  metric: paste_flags
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 2 }, en: { lo: 0, hi: 2 } }
+  corridor: { ru: [0, 0], en: [0, 0] }
+  name: { ru: "Следы вставки", en: "Paste traces" }
+- id: D-04
+  category: metadata
+  kind: document
+  weight: 1.2
+  metric: chat_format_flags
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 2 }, en: { lo: 0, hi: 2 } }
+  corridor: { ru: [0, 0], en: [0, 0] }
+  name: { ru: "Форматирование из чатов", en: "Chat formatting" }
+- id: D-05
+  category: metadata
+  kind: document
+  weight: 0
+  metric: text_score
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 1 }, en: { lo: 0, hi: 1 } }
+  corridor: { ru: [0, 0.4], en: [0, 0.4] }
+  name: { ru: "Текст документа (пайплайн)", en: "Document text (pipeline)" }
+- id: I-01
+  category: image
+  kind: image
+  weight: 3.0
+  metric: c2pa_ai
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 1 }, en: { lo: 0, hi: 1 } }
+  corridor: { ru: [0, 0], en: [0, 0] }
+  name: { ru: "C2PA / Content Credentials", en: "C2PA / Content Credentials" }
+- id: I-02
+  category: image
+  kind: image
+  weight: 2.5
+  metric: meta_flags
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 2 }, en: { lo: 0, hi: 2 } }
+  corridor: { ru: [0, 0], en: [0, 0] }
+  name: { ru: "EXIF/XMP/PNG-чанки", en: "EXIF/XMP/PNG chunks" }
+- id: I-03
+  category: image
+  kind: image
+  weight: 0.8
+  metric: size_flags
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 2 }, en: { lo: 0, hi: 2 } }
+  corridor: { ru: [0, 0], en: [0, 0] }
+  name: { ru: "Типичные размеры генераторов", en: "Generator-typical dimensions" }
+- id: I-04
+  category: image
+  kind: image
+  weight: 0.6
+  metric: spectral_peak
+  direction: up
+  thresholds: { ru: { lo: 4, hi: 14 }, en: { lo: 4, hi: 14 } }
+  corridor: { ru: [0, 5], en: [0, 5] }
+  name: { ru: "Частотный анализ (FFT)", en: "Frequency analysis (FFT)" }
+- id: I-05
+  category: image
+  kind: image
+  weight: 0.6
+  metric: smooth_share
+  direction: up
+  thresholds: { ru: { lo: 0.3, hi: 0.8 }, en: { lo: 0.3, hi: 0.8 } }
+  corridor: { ru: [0, 0.35], en: [0, 0.35] }
+  name: { ru: "Шум сенсора", en: "Sensor noise" }
+- id: I-06
+  category: image
+  kind: image
+  weight: 0.4
+  metric: jpeg_flags
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 2 }, en: { lo: 0, hi: 2 } }
+  corridor: { ru: [0, 0], en: [0, 0] }
+  name: { ru: "История JPEG", en: "JPEG history" }
+- id: I-07
+  category: image
+  kind: image
+  weight: 2.0
+  metric: watermark_strength
+  direction: up
+  thresholds: { ru: { lo: 0.55, hi: 0.85 }, en: { lo: 0.55, hi: 0.85 } }
+  corridor: { ru: [0.3, 0.5], en: [0.3, 0.5] }
+  name: { ru: "Невидимые водяные знаки", en: "Invisible watermarks" }
+- id: C-01
+  category: code
+  kind: code
+  weight: 1.5
+  metric: comment_flags
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 3 }, en: { lo: 0, hi: 3 } }
+  corridor: { ru: [0, 1], en: [0, 1] }
+  name: { ru: "Комментарии", en: "Comments" }
+- id: C-02
+  category: code
+  kind: code
+  weight: 0.8
+  metric: dictionary_names
+  direction: up
+  thresholds: { ru: { lo: 0.6, hi: 0.95 }, en: { lo: 0.6, hi: 0.95 } }
+  corridor: { ru: [0.3, 0.7], en: [0.3, 0.7] }
+  name: { ru: "Именование", en: "Naming" }
+- id: C-03
+  category: code
+  kind: code
+  weight: 1.0
+  metric: structure_flags
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 3 }, en: { lo: 0, hi: 3 } }
+  corridor: { ru: [0, 1], en: [0, 1] }
+  name: { ru: "Шаблонная структура", en: "Boilerplate structure" }
+- id: C-04
+  category: code
+  kind: code
+  weight: 0.6
+  metric: style_flags
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 2 }, en: { lo: 0, hi: 2 } }
+  corridor: { ru: [0, 1], en: [0, 1] }
+  name: { ru: "Идеальный стиль", en: "Too-perfect style" }
+- id: C-05
+  category: code
+  kind: code
+  weight: 2.5
+  metric: chat_markers
+  direction: up
+  thresholds: { ru: { lo: 0, hi: 2 }, en: { lo: 0, hi: 2 } }
+  corridor: { ru: [0, 0], en: [0, 0] }
+  name: { ru: "Маркеры чат-ответа", en: "Chat answer markers" }

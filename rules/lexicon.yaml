@@ -1,0 +1,42 @@
+# Вспомогательные словари для L-04, L-05, S-01, S-03, S-05, S-06, C-05.
+hedges:
+  ru: ["может", "могут", "может быть", "как правило", "в некоторой степени", "в определённой степени",
+       "в определенной степени", "по всей видимости", "вероятно", "возможно", "обычно", "зачастую",
+       "в большинстве случаев", "в целом", "так или иначе", "определённым образом", "определенным образом",
+       "следует отметить", "представляется", "является", "являются", "осуществля", "данный", "данного",
+       "в рамках", "с целью", "в связи с", "посредством"]
+  en: ["may", "might", "could", "potentially", "generally", "typically", "often", "to some extent",
+       "in many cases", "arguably", "it seems", "likely", "perhaps", "somewhat", "relatively",
+       "in order to", "utilize", "utilise", "facilitate", "various", "numerous", "overall", "ensure"]
+nominal_suffixes:
+  ru: ["ание", "ение", "ость", "ция", "ирование", "ании", "ении", "ости", "ции"]
+  en: ["tion", "ment", "ness", "ity", "ance", "ence"]
+noise:
+  ru: ["ну", "вот", "же", "ведь", "типа", "короче", "блин", "вообще", "кстати", "прям", "реально",
+       "честно", "наверное", "фиг", "ага", "угу", "ладно", "нифига", "капец", "жесть", "мол", "дескать",
+       "я", "мне", "меня", "мой", "моя", "моё", "мои", "мы", "нам", "нас", "наш", "наша", "вчера",
+       "позавчера", "сегодня", "утром", "вечером", "ой", "эх", "хм", "лол", "чё", "щас", "тыщ", "штук"]
+  en: ["i", "i'm", "i've", "i'd", "me", "my", "we", "our", "us", "yeah", "nope", "gonna", "wanna",
+       "kinda", "sorta", "honestly", "actually", "basically", "literally", "lol", "ok", "okay", "well",
+       "yesterday", "tonight", "stuff", "guess", "huh", "damn", "dunno", "anyway", "can't", "don't",
+       "didn't", "won't", "isn't", "wasn't", "it's", "that's", "there's", "you're", "we're", "pretty"]
+conclusion:
+  ru: ["в заключение", "таким образом", "подводя итог", "в итоге", "итак", "заключение", "вывод", "выводы"]
+  en: ["in conclusion", "to sum up", "overall", "ultimately", "in summary", "conclusion", "final thoughts", "to conclude"]
+summary_openers:
+  ru: ["таким образом", "в итоге", "в целом", "итак", "подводя итог", "следовательно", "это означает", "это делает"]
+  en: ["overall", "ultimately", "in short", "in essence", "thus", "therefore", "this means", "this makes", "in the end"]
+template_headings:
+  ru: ["введение", "заключение", "преимущества", "недостатки", "плюсы и минусы", "основные", "ключевые",
+       "что такое", "почему важно", "итоги", "вывод", "выводы", "советы", "рекомендации", "как выбрать"]
+  en: ["introduction", "conclusion", "benefits", "advantages", "disadvantages", "pros and cons", "key",
+       "what is", "why it matters", "final thoughts", "takeaways", "best practices", "overview", "how to choose"]
+chat_markers:
+  - "here'?s (?:the|an?) (?:updated|complete|full|revised|improved|corrected|modified) (?:code|version|script|implementation)"
+  - "example usage:?"
+  - "your_api_key_here|your-api-key|<your[_ -]api[_ -]key>|YOUR_API_KEY"
+  - "replace (?:this|with your) (?:own )?(?:api key|value|path)"
+  - "certainly!|sure! here|i hope this helps|let me know if"
+  - "this (?:code|script|function) (?:demonstrates|does the following|will)"
+  - "вот (?:обновлённый|обновленный|исправленный|полный) код"
+  - "пример использования:?"

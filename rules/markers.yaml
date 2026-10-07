@@ -1,0 +1,154 @@
+# L-01: словари маркеров ИИ. pattern — регулярное выражение (без флагов, регистр игнорируется),
+# weight — вклад в плотность, replace — подсказки замены (не применяются автоматически).
+ru:
+  - pattern: "важно (?:отметить|подчеркнуть|понимать)"
+    weight: 2
+    replace: ["удалить", "кстати", "заметьте"]
+  - pattern: "стоит (?:отметить|подчеркнуть|упомянуть)"
+    weight: 2
+    replace: ["удалить", "кстати"]
+  - pattern: "в заключение"
+    weight: 1.5
+    replace: ["в итоге", "короче говоря", "удалить и закончить конкретным примером"]
+  - pattern: "таким образом"
+    weight: 1
+    replace: ["выходит", "значит", "удалить"]
+  - pattern: "игра(?:ет|ют|л[аио]?) (?:ключев|важн|значительн)\\w* рол\\w*"
+    weight: 2
+    replace: ["сильно влияет на", "без него не работает"]
+  - pattern: "в современном мире"
+    weight: 2
+    replace: ["сейчас", "сегодня", "удалить"]
+  - pattern: "явля(?:ется|ются) неотъемлемой частью"
+    weight: 2
+    replace: ["входит в", "без этого никак"]
+  - pattern: "не только\\b[^.!?]{1,80}?\\bно и"
+    weight: 1
+    replace: ["и … и …", "разбить на два предложения"]
+  - pattern: "давайте рассмотрим"
+    weight: 2
+    replace: ["посмотрим", "удалить"]
+  - pattern: "погруз(?:имся|итесь|иться)"
+    weight: 2
+    replace: ["разберёмся", "посмотрим"]
+  - pattern: "комплексн\\w* подход\\w*"
+    weight: 1.5
+    replace: ["со всех сторон", "по-разному"]
+  - pattern: "широк\\w* спектр\\w*"
+    weight: 1.5
+    replace: ["много", "разные"]
+  - pattern: "уникальн\\w*"
+    weight: 0.7
+    replace: ["редкий", "необычный", "свой"]
+  - pattern: "эффективн\\w*"
+    weight: 0.5
+    replace: ["рабочий", "толковый", "быстрый"]
+  - pattern: "оптимизир\\w*"
+    weight: 0.7
+    replace: ["ускорить", "упростить", "подкрутить"]
+  - pattern: "в целом"
+    weight: 0.7
+    replace: ["в общем", "удалить"]
+  - pattern: "ключев\\w* (?:аспект|фактор|элемент)\\w*"
+    weight: 1.5
+    replace: ["главное", "основное"]
+  - pattern: "позволя(?:ет|ют) (?:значительно|существенно)"
+    weight: 1.5
+    replace: ["помогает", "даёт"]
+  - pattern: "(?:следует|необходимо) учитывать"
+    weight: 1
+    replace: ["не забывайте", "имейте в виду"]
+  - pattern: "благодаря (?:этому|чему)"
+    weight: 0.7
+    replace: ["поэтому", "так что"]
+  - pattern: "в эпоху (?:цифров|технолог)\\w*"
+    weight: 2
+    replace: ["сейчас", "удалить"]
+  - pattern: "открыва(?:ет|ют) (?:новые )?(?:возможности|горизонты)"
+    weight: 1.5
+    replace: ["даёт шанс", "позволяет"]
+en:
+  - pattern: "delv(?:e|es|ed|ing)"
+    weight: 3
+    replace: ["look at", "dig into", "remove"]
+  - pattern: "tapestry"
+    weight: 3
+    replace: ["mix", "set"]
+  - pattern: "testament to"
+    weight: 2.5
+    replace: ["shows", "proves"]
+  - pattern: "multifaceted"
+    weight: 2
+    replace: ["complex", "messy"]
+  - pattern: "pivotal"
+    weight: 2
+    replace: ["key", "big"]
+  - pattern: "crucial"
+    weight: 1.2
+    replace: ["important", "big", "remove"]
+  - pattern: "seamless(?:ly)?"
+    weight: 1.5
+    replace: ["smooth", "easy"]
+  - pattern: "robust"
+    weight: 1.2
+    replace: ["solid", "sturdy"]
+  - pattern: "leverag(?:e|es|ed|ing)"
+    weight: 1.5
+    replace: ["use"]
+  - pattern: "foster(?:s|ed|ing)?"
+    weight: 1.5
+    replace: ["build", "grow", "help"]
+  - pattern: "navigat(?:e|ing) the (?:complexities|intricacies)"
+    weight: 3
+    replace: ["deal with", "handle"]
+  - pattern: "in today'?s (?:fast-paced|digital|modern|ever-changing) world"
+    weight: 3
+    replace: ["these days", "now", "remove"]
+  - pattern: "it'?s (?:important|worth|crucial) (?:to note|noting|to remember)"
+    weight: 2.5
+    replace: ["remove", "by the way", "note"]
+  - pattern: "ever-(?:evolving|changing)"
+    weight: 2
+    replace: ["changing", "shifting"]
+  - pattern: "realm"
+    weight: 2
+    replace: ["area", "field", "world"]
+  - pattern: "landscape"
+    weight: 1.2
+    replace: ["scene", "market", "field"]
+  - pattern: "underscor(?:e|es|ed|ing)"
+    weight: 2
+    replace: ["show", "stress"]
+  - pattern: "intricate"
+    weight: 1.5
+    replace: ["detailed", "tricky"]
+  - pattern: "in conclusion"
+    weight: 1.5
+    replace: ["so", "all in all", "end with a concrete example"]
+  - pattern: "furthermore"
+    weight: 1
+    replace: ["also", "plus"]
+  - pattern: "moreover"
+    weight: 1
+    replace: ["also", "and"]
+  - pattern: "embark(?:s|ed|ing)? on"
+    weight: 2
+    replace: ["start", "begin"]
+  - pattern: "unlock(?:s|ing)? (?:the )?(?:full )?potential"
+    weight: 2.5
+    replace: ["get more out of", "make better use of"]
+  - pattern: "a myriad of|myriad"
+    weight: 2
+    replace: ["many", "lots of"]
+  - pattern: "plays? a (?:crucial|vital|key|pivotal|significant) role"
+    weight: 2.5
+    replace: ["matters a lot for", "drives"]
+  - pattern: "harness(?:es|ed|ing)? the power"
+    weight: 2.5
+    replace: ["use"]
+  - pattern: "comprehensive"
+    weight: 0.8
+    replace: ["full", "thorough"]
+  - pattern: "vibrant"
+    weight: 1.2
+    replace: ["lively", "busy"]
