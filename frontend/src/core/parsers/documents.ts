@@ -177,7 +177,7 @@ function decodeCp1251(b: number): string {
 
 export function parsePlain(src: string, format: 'txt' | 'md'): ParsedDocument {
   const meta = emptyMeta(format);
-  const text = src.replace(/\r\n?/g, '\n').replace(/^﻿/, '');
+  const text = src.replace(/\r\n?/g, '\n').replace(/^\uFEFF/, '');
   const paras = text.split(/\n\s*\n/);
   let off = 0;
   let i = 0;

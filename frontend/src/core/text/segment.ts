@@ -2,7 +2,7 @@ import type { Lang, Paragraph, Sentence, TextContext } from '../types';
 
 const CYR = /\p{Script=Cyrillic}/u;
 const LAT = /\p{Script=Latin}/u;
-export const WORD_RE = /[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*/gu;
+export const WORD_RE = /[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu;
 
 export function detectLang(text: string): { lang: Lang; mixedShare: number } {
   let cyr = 0;

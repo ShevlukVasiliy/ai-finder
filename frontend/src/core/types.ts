@@ -146,6 +146,8 @@ export interface AnalysisInput {
   image?: ParsedImage;
   code?: CodeContext;
   lang?: LangSetting;
+  /** Language for advice and explanations (defaults to the content language). */
+  uiLang?: Lang;
 }
 
 export interface AdviceItem {

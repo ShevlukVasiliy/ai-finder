@@ -58,7 +58,8 @@ export function analyze(input: AnalysisInput): Report {
 
   const forced = input.lang && input.lang !== 'auto' ? input.lang : undefined;
   const lang: Lang = forced ?? (text.trim() ? detectLang(text).lang : 'ru');
-  let results: DetectorResult[] = [];
+  const ui: Lang = input.uiLang ?? lang;
+  let results: DetectorResult[];
   let sentences: { start: number; end: number }[] = [];
 
   if (input.kind === 'text' || input.kind === 'document') {
@@ -68,7 +69,7 @@ export function analyze(input: AnalysisInput): Report {
     results = runText(ctx);
     if (input.kind === 'document') {
       const doc = input.document!;
-      const docResults = getRegistry().document.map((d) => d.analyze({ doc, lang }));
+      const docResults = getRegistry().document.map((d) => d.analyze({ doc, lang: ui }));
       const textScore = combine(results, 'text') / 100;
       results = [
         ...results,
@@ -78,14 +79,14 @@ export function analyze(input: AnalysisInput): Report {
     }
   } else if (input.kind === 'image') {
     const image = input.image!;
-    results = getRegistry().image.map((d) => d.analyze({ image, lang }));
+    results = getRegistry().image.map((d) => d.analyze({ image, lang: ui }));
   } else {
     const code = input.code ?? { code: text, language: detectCodeLanguage(text), lines: text.split('\n') };
-    results = getRegistry().code.map((d) => d.analyze({ code, lang }));
+    results = getRegistry().code.map((d) => d.analyze({ code, lang: ui }));
   }
 
   const score = combine(results, input.kind);
-  const advice = buildAdvice(results, input.kind, lang, input.kind === 'code' ? '' : text);
+  const advice = buildAdvice(results, input.kind, ui, input.kind === 'code' ? '' : text);
   return {
     kind: input.kind,
     lang,
@@ -96,7 +97,7 @@ export function analyze(input: AnalysisInput): Report {
     results,
     findings: results.flatMap((r) => r.findings),
     advice,
-    metrics: metricsFor(results, lang),
+    metrics: metricsFor(results, ui),
     sentences: sentenceScores(sentences, results, score),
     text,
     document: input.document?.meta,
