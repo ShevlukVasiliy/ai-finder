@@ -155,22 +155,25 @@ export function spectralPeak(px: PixelData, n = 256): number {
       hp[i] = 4 * plane[i]! - plane[i - 1]! - plane[i + 1]! - plane[i - n]! - plane[i + n]!;
     }
   const mag = spectrum(hp, n);
-  const vals: number[] = [];
-  for (let i = 0; i < mag.length; i++) if (i !== 0) vals.push(mag[i]!);
-  vals.sort((a, b) => a - b);
-  const median = vals[Math.floor(vals.length / 2)]! || 1e-9;
+  const at = (x: number, y: number) => Math.expm1(mag[(((y % n) + n) % n) * n + (((x % n) + n) % n)]!);
+  // A periodic artefact is a spike relative to its immediate spectral neighbourhood.
   let peak = 0;
-  for (const f of [n / 2, n / 4, (3 * n) / 4, n / 8]) {
+  for (const div of [2, 4, 8, 16]) {
+    const f = n / div;
     for (const [fx, fy] of [
       [f, 0],
       [0, f],
       [f, f],
     ] as const) {
-      const v = mag[(fy % n) * n + (fx % n)]!;
-      if (v > peak) peak = v;
+      const ring: number[] = [];
+      for (let dy = -3; dy <= 3; dy++)
+        for (let dx = -3; dx <= 3; dx++) if (Math.max(Math.abs(dx), Math.abs(dy)) >= 2 && dx !== 0 && dy !== 0) ring.push(at(fx + dx, fy + dy));
+      ring.sort((a, b) => a - b);
+      const med = ring[Math.floor(ring.length / 2)]! || 1e-9;
+      peak = Math.max(peak, at(fx, fy) / med);
     }
   }
-  return Math.expm1(peak) / Math.expm1(median);
+  return peak;
 }
 
 const I04: Detector<ImageContext> = {

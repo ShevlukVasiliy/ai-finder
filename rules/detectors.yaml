@@ -214,8 +214,8 @@
   weight: 1.0
   metric: perplexity_cv
   direction: down
-  thresholds: { ru: { lo: 0.08, hi: 0.2 }, en: { lo: 0.08, hi: 0.2 } }
-  corridor: { ru: [0.15, 0.4], en: [0.15, 0.4] }
+  thresholds: { ru: { lo: 0.04, hi: 0.1 }, en: { lo: 0.04, hi: 0.1 } }
+  corridor: { ru: [0.08, 0.2], en: [0.08, 0.2] }
   name: { ru: "Псевдо-перплексия (n-граммы)", en: "Pseudo-perplexity (n-grams)" }
 - id: P-02
   category: stats
@@ -223,8 +223,8 @@
   weight: 0.8
   metric: compression_ratio
   direction: down
-  thresholds: { ru: { lo: 0.3, hi: 0.4 }, en: { lo: 0.36, hi: 0.46 } }
-  corridor: { ru: [0.36, 0.5], en: [0.42, 0.55] }
+  thresholds: { ru: { lo: 0.4, hi: 0.48 }, en: { lo: 0.52, hi: 0.6 } }
+  corridor: { ru: [0.47, 0.6], en: [0.58, 0.7] }
   name: { ru: "Сжимаемость", en: "Compressibility" }
 - id: D-01
   category: metadata
@@ -349,8 +349,8 @@
   weight: 0.8
   metric: dictionary_names
   direction: up
-  thresholds: { ru: { lo: 0.6, hi: 0.95 }, en: { lo: 0.6, hi: 0.95 } }
-  corridor: { ru: [0.3, 0.7], en: [0.3, 0.7] }
+  thresholds: { ru: { lo: 0.3, hi: 0.7 }, en: { lo: 0.3, hi: 0.7 } }
+  corridor: { ru: [0.1, 0.35], en: [0.1, 0.35] }
   name: { ru: "Именование", en: "Naming" }
 - id: C-03
   category: code

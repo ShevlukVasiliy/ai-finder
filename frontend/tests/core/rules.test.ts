@@ -1,4 +1,4 @@
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml';
 import { describe, expect, it } from 'vitest';
 import { RuleValidationError, defaultSources, getRules, normalize, parseRules, setRules, spec, validateRules } from '../../src/core/rules';
 

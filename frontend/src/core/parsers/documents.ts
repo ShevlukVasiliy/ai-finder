@@ -10,7 +10,8 @@ function xml(src: string): Document {
 }
 
 function byLocal(root: Document | Element, name: string): Element[] {
-  return Array.from(root.getElementsByTagName('*')).filter((e) => e.localName === name);
+  const all = Array.from(root.getElementsByTagName('*'));
+  return name === '*' ? all : all.filter((e) => e.localName === name);
 }
 
 function firstText(root: Document, name: string): string | undefined {

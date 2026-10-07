@@ -85,7 +85,7 @@ const S03: Detector<TextContext> = {
   },
 };
 
-const ITEM_TERM = /^\s*(?:[-*•–]|\d+[.)])\s*(?:\*\*[^*]+\*\*|[\p{Lu}][\p{L}\s-]{1,40}):\s+\S/u;
+const ITEM_TERM = /^\s*(?:[-*•–]|\d+[.)])\s*(?:\*\*[^*]+:\*\*|\*\*[^*]+\*\*:|[\p{Lu}][\p{L}\s-]{1,40}:)\s+\S/u;
 
 const S04: Detector<TextContext> = {
   id: 'S-04',

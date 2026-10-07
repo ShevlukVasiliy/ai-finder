@@ -1,4 +1,4 @@
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml';
 import detectorsSrc from '@rules/detectors.yaml?raw';
 import adviceSrc from '@rules/advice.yaml?raw';
 import markersSrc from '@rules/markers.yaml?raw';
