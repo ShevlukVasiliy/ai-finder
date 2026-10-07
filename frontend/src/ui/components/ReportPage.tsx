@@ -58,7 +58,7 @@ export function ReportPage(p: ReportPageProps) {
         </div>
         <aside className="report-side">
           <ScoreGauge score={r.score} verdict={r.verdict} confidence={r.confidence} loading={p.loading} />
-          <TopAdvice items={r.advice} onFocus={focus} />
+          <TopAdvice items={r.advice} onFocus={focus} activeId={active} />
           <CategoryBreakdown categories={r.categories} />
           <AdviceList items={r.advice} activeId={active} onFocus={focus} />
           <MetricList metrics={r.metrics} />
