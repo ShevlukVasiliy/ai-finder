@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url';
 const rulesDir = fileURLToPath(new URL('../rules', import.meta.url));
 
 export default defineConfig({
+  // GitHub Pages serves the project under /<repo>/; set VITE_BASE in CI.
+  base: process.env.VITE_BASE ?? '/',
   plugins: [react()],
   resolve: { alias: { '@rules': rulesDir } },
   server: { fs: { allow: ['..'] } },

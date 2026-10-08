@@ -25,18 +25,13 @@
 - **Регрессия качества:** `frontend/tests/quality/` с мини-корпусом размеченных текстов. Тест проверяет ROC-AUC ≥ 0,8 и FPR на человеческих текстах ≤ 10 % на этом корпусе.
 - **Покрытие:** ядро анализа ≥ 85 %, UI ≥ 80 %. Порог зашит в CI, и при недоборе CI падает.
 
-## Деплой в Yandex Cloud
+## Деплой
 
-Архитектура:
-- **Frontend:** статика в приватном бакете **Object Storage**, отдаётся через **API Gateway** (`/{path+}` → object_storage, fallback на `index.html` для SPA).
-- **Облако:** `general`, каталог `default`.
-- **Инфраструктура:** без Terraform. Бакет и сервисный аккаунт для деплоя создаются один раз командами `yc` (описаны в `docs/DEPLOY.md`).
-
-GitHub Actions в `.github/workflows/`:
-1. `ci.yml` — на каждый PR и push: lint, typecheck, юнит-тесты и покрытие с порогами, e2e Playwright.
-2. `deploy.yml` — на push в `main` после зелёного CI: сборка и `aws s3 sync` фронта в бакет (endpoint `https://storage.yandexcloud.net`), **smoke-тест** после деплоя: `/` и ассеты отдают 200 через шлюз, а анализ работает в headless-браузере. Если smoke-тест не прошёл, предыдущая сборка восстанавливается из бакета (каталог `releases/<sha>`).
-
-Авторизация в облаке — через Workload Identity Federation (OIDC GitHub → сервисный аккаунт), если получится, иначе через авторизованный ключ в секретах. Список нужных секретов и переменных (`YC_CLOUD_ID`, `YC_FOLDER_ID` и т. д.) и пошаговую инструкцию первичной настройки опиши в `docs/DEPLOY.md`.
+- Статика публикуется в **GitHub Pages** (`/ai-finder/`, SPA fallback через `404.html`).
+- GitHub Actions в `.github/workflows/`:
+  1. `ci.yml` — на каждый PR и push: lint, typecheck, юнит-тесты и покрытие с порогами, e2e Playwright.
+  2. `deploy.yml` — после зелёного CI на `main`: сборка, публикация в Pages, **smoke-тест** по публичному URL.
+- Описание — в `docs/DEPLOY.md`.
 
 ## Порядок работы
 
@@ -55,7 +50,7 @@ GitHub Actions в `.github/workflows/`:
 - [ ] Все этапы 1–6 из ТЗ реализованы.
 - [ ] Все детекторы из ТЗ (T, R, L, S, P, D, I, C) работают и покрыты тестами; советы есть для каждого из них на RU и EN.
 - [ ] CI зелёный: lint, types, unit, coverage-пороги, e2e.
-- [ ] Прод задеплоен через GitHub Actions в Yandex Cloud: фронт в Object Storage за API Gateway; smoke-тест после деплоя проходит.
+- [ ] Прод задеплоен через GitHub Actions в GitHub Pages; smoke-тест после деплоя проходит.
 - [ ] `README.md` (запуск локально одной командой `pnpm dev`), `docs/DEPLOY.md`, `docs/DECISIONS.md`, `docs/PROGRESS.md` актуальны.
 - [ ] Регрессия качества на корпусе проходит пороги.
 

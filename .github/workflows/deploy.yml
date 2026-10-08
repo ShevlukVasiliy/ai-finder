@@ -1,6 +1,6 @@
 name: Deploy
 
-# Runs after a green CI on main. The build goes to a private Object Storage bucket served by API Gateway.
+# Runs after a green CI on main and publishes the static build to GitHub Pages.
 on:
   workflow_run:
     workflows: [CI]
@@ -8,28 +8,19 @@ on:
     branches: [main]
   workflow_dispatch:
 
-concurrency:
-  group: deploy-prod
-  cancel-in-progress: false
-
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
-env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.YC_S3_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_S3_SECRET_ACCESS_KEY }}
-  AWS_DEFAULT_REGION: ru-central1
-  S3: aws s3 --endpoint-url https://storage.yandexcloud.net
-  BUCKET: ${{ vars.SITE_BUCKET }}
-  SITE_URL: ${{ vars.SITE_URL }}
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: ${{ vars.SITE_URL }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -44,50 +35,53 @@ jobs:
           cache-dependency-path: frontend/pnpm-lock.yaml
       - name: Build
         working-directory: frontend
+        env:
+          VITE_BASE: /${{ github.event.repository.name }}/
         run: |
           pnpm install --frozen-lockfile
           pnpm build
+          # SPA fallback: GitHub Pages serves 404.html for unknown paths.
+          cp dist/index.html dist/404.html
+          echo "${{ github.event.workflow_run.head_sha || github.sha }}" > dist/release.txt
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
 
-      - name: Remember the currently deployed release (for rollback)
-        id: prev
-        run: |
-          prev=$($S3 cp s3://$BUCKET/release.txt - 2>/dev/null || true)
-          echo "sha=$prev" >> "$GITHUB_OUTPUT"
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - id: pages
+        uses: actions/deploy-pages@v4
 
-      - name: Upload release snapshot
-        run: |
-          SHA=${{ github.event.workflow_run.head_sha || github.sha }}
-          echo "$SHA" > frontend/dist/release.txt
-          $S3 sync frontend/dist "s3://$BUCKET/releases/$SHA/" --delete --only-show-errors
-
-      - name: Publish
-        run: |
-          # Hashed assets first (long cache), then HTML/entry files (no cache) so clients never see a broken mix.
-          $S3 sync frontend/dist "s3://$BUCKET/" --exclude "releases/*" --exclude "*.html" --exclude "release.txt" \
-            --cache-control "public,max-age=31536000,immutable" --only-show-errors
-          $S3 sync frontend/dist "s3://$BUCKET/" --exclude "*" --include "*.html" --include "release.txt" \
-            --cache-control "no-cache" --only-show-errors
-          $S3 sync frontend/dist "s3://$BUCKET/" --exclude "releases/*" --delete --only-show-errors
-
+  smoke:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
       - name: Smoke test
-        id: smoke
         working-directory: frontend
         env:
-          E2E_BASE_URL: ${{ vars.SITE_URL }}
+          E2E_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
           SMOKE: '1'
         run: |
           set -e
-          for p in / /release.txt $(curl -s "$SITE_URL/" | grep -o '/assets/[^"]*'); do
-            code=$(curl -s -o /dev/null -w '%{http_code}' "$SITE_URL$p")
-            echo "$p → $code"; test "$code" = 200
-          done
-          test "$(curl -s "$SITE_URL/release.txt")" = "${{ github.event.workflow_run.head_sha || github.sha }}"
+          SHA=${{ github.event.workflow_run.head_sha || github.sha }}
+          for i in $(seq 1 30); do [ "$(curl -s "${E2E_BASE_URL}release.txt")" = "$SHA" ] && break; sleep 10; done
+          test "$(curl -s "${E2E_BASE_URL}release.txt")" = "$SHA"
+          pnpm install --frozen-lockfile
           pnpm exec playwright install --with-deps chromium
           pnpm exec playwright test e2e/smoke.spec.ts --project desktop
-
-      - name: Roll back on failed smoke test
-        if: failure() && steps.smoke.outcome == 'failure' && steps.prev.outputs.sha != ''
-        run: |
-          PREV=${{ steps.prev.outputs.sha }}
-          echo "Rolling back to $PREV"
-          $S3 sync "s3://$BUCKET/releases/$PREV/" "s3://$BUCKET/" --exclude "releases/*" --delete --only-show-errors
