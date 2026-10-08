@@ -3,7 +3,9 @@ import { analyze } from '../../src/core/analyze';
 import { fitLogistic, fpr, rocAuc } from '../../src/core/metrics';
 import { loadModels } from '../../src/core/ngram';
 import { getRules } from '../../src/core/rules';
-import { CORPUS } from './corpus';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { CORPUS, EXTERNAL_TEST } from './corpus';
 
 beforeAll(() => loadModels());
 
@@ -37,5 +39,29 @@ describe('quality regression on the labelled corpus', () => {
         for (const sp of [...a.spans].sort((p, q) => q.start - p.start)) edited = edited.slice(0, sp.start) + edited.slice(sp.end);
       expect(analyze({ kind: 'text', text: edited, lang: s.lang }).score).toBeLessThanOrEqual(before.score);
     }
+  });
+});
+
+describe('held-out external sample (COLING-2025 MGT: RuATD/M4)', () => {
+  const score = (lang: 'ru' | 'en') => {
+    const s = EXTERNAL_TEST.filter((x) => x.lang === lang);
+    const sc = s.map((x) => analyze({ kind: 'text', text: x.text, lang }).score);
+    return { auc: rocAuc(sc, s.map((x) => x.ai)), fpr65: fpr(sc, s.map((x) => x.ai), 65) };
+  };
+  it('RU: ROC-AUC ≥ 0.9, FPR@65 ≤ 10 %', () => {
+    const r = score('ru');
+    expect(r.auc).toBeGreaterThanOrEqual(0.9);
+    expect(r.fpr65).toBeLessThanOrEqual(0.1);
+  });
+  it('EN: ROC-AUC ≥ 0.75, FPR@65 ≤ 15 %', () => {
+    const r = score('en');
+    expect(r.auc).toBeGreaterThanOrEqual(0.75);
+    expect(r.fpr65).toBeLessThanOrEqual(0.15);
+  });
+});
+
+describe('real assistant answers not in the corpus', () => {
+  it.each(['ru-ai-holdout.txt'])('%s is flagged as AI', (f) => {
+    expect(analyze({ kind: 'text', text: readFileSync(join(__dirname, 'cases', f), 'utf8') }).verdict).toBe('ai');
   });
 });

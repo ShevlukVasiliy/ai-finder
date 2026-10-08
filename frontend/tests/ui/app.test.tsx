@@ -60,7 +60,7 @@ describe('App user flows', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Тёмная' }));
     expect(document.documentElement.dataset.theme).toBe('dark');
     await userEvent.selectOptions(screen.getByLabelText('Язык текста'), 'en');
-    await userEvent.click(screen.getByRole('button', { name: 'UI language' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Язык интерфейса' }));
     expect(screen.getByRole('button', { name: 'Analyse' })).toBeDisabled();
   });
 

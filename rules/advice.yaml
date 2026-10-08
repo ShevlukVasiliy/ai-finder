@@ -379,6 +379,25 @@ rules:
       explain: "Contrast constructions: {count}, e.g. “{phrase}”."
       actions:
         - "Just say what Y is without negating X first."
+  - id: S-07.assistant_answer
+    detector: S-07
+    target: phrases
+    effort: 2
+    expected_gain: 8
+    ru:
+      title: "Текст построен как ответ чат-бота"
+      explain: "{extra}"
+      actions:
+        - "Уберите вступление-рамку («Коротко:», «Расставил по порядку») и начните сразу с сути."
+        - "Удалите итоговую строку и предложение «если хочешь, помогу» в конце."
+        - "Замените нумерованные подзаголовки связным текстом или своими формулировками."
+    en:
+      title: "Structured like a chatbot answer"
+      explain: "{extra}"
+      actions:
+        - "Drop the framing opener (“Short answer:”, “Here's what I'd do”) and start with the point."
+        - "Remove the recap line and the closing “want me to…” offer."
+        - "Replace numbered sub-headings with connected prose or your own wording."
   - id: P-01.low_perplexity
     detector: P-01
     target: sentences

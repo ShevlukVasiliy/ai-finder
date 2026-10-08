@@ -16,19 +16,19 @@ const S01: Detector<TextContext> = {
     const listItems = paras.filter((p) => p.kind === 'list').length;
     if (headings >= 2) {
       score += 0.3;
-      parts.push(ctx.lang === 'ru' ? `заголовков: ${headings}` : `headings: ${headings}`);
+      parts.push((ctx.uiLang ?? ctx.lang) === 'ru' ? `заголовков: ${headings}` : `headings: ${headings}`);
     }
     // Count "point" blocks: list items or headed sections.
     const points = listItems || Math.max(0, headings - 1);
     if (points >= 3 && points <= 7) {
       score += 0.3;
-      parts.push(ctx.lang === 'ru' ? `пунктов: ${points}` : `points: ${points}`);
+      parts.push((ctx.uiLang ?? ctx.lang) === 'ru' ? `пунктов: ${points}` : `points: ${points}`);
     }
     const tail = paras.slice(-2).map((p) => p.text).join('\n');
     concl.lastIndex = 0;
     if (concl.test(tail)) {
       score += 0.4;
-      parts.push(ctx.lang === 'ru' ? 'итоговый абзац' : 'summary paragraph');
+      parts.push((ctx.uiLang ?? ctx.lang) === 'ru' ? 'итоговый абзац' : 'summary paragraph');
     }
     const first = paras[0]!;
     if (first.kind === 'text' && first.sentences.length <= 3 && (headings || listItems)) score += 0.1;
@@ -153,4 +153,65 @@ const S06: Detector<TextContext> = {
   },
 };
 
-export const DETECTORS = [S01, S02, S03, S04, S05, S06];
+/** Short label line: "1. Title", "Неделя 1. База", "Плюсы:", "What to do first". */
+const SECTION_LINE = /^\s*(?:\d+[.)]\s+)?[\p{Lu}][^.!?\n]{1,60}(?:[.:]\s*[^.!?\n]{0,40})?$/u;
+
+const S07: Detector<TextContext> = {
+  id: 'S-07',
+  analyze(ctx) {
+    if (ctx.words.length < 60) return notApplicable('S-07', ctx.lang);
+    const lex = getRules().lexicon;
+    const L = ctx.lang;
+    const U = ctx.uiLang ?? L;
+    const notes: string[] = [];
+    const spans: Span[] = [];
+    let flags = 0;
+    const head = ctx.text.slice(0, 220);
+    const tail = ctx.text.slice(-320);
+    const find = (list: string[], where: string, offset: number) => {
+      const re = phraseRe(list, true);
+      const m = re.exec(where.toLowerCase());
+      return m ? { start: offset + m.index, end: offset + m.index + m[0].length, detector: 'S-07', label: ctx.text.slice(offset + m.index, offset + m.index + m[0].length) } : null;
+    };
+    const opener = find(lex.assistant_openers[L], head, 0);
+    if (opener) {
+      flags += 1;
+      spans.push(opener);
+      notes.push(U === 'ru' ? `Вступление-рамка: «${opener.label}».` : `Framing opener: “${opener.label}”.`);
+    }
+    const tailOff = ctx.text.length - tail.length;
+    const recap = find(lex.assistant_recaps[L], tail, tailOff) ?? find(lex.assistant_recaps[L], ctx.text.slice(-900), ctx.text.length - Math.min(900, ctx.text.length));
+    if (recap) {
+      flags += 1;
+      spans.push(recap);
+      notes.push(U === 'ru' ? `Итоговая строка: «${recap.label}».` : `Recap line: “${recap.label}”.`);
+    }
+    const lastPara = ctx.paragraphs[ctx.paragraphs.length - 1];
+    const offer = lastPara ? find(lex.assistant_offers[L], lastPara.text, lastPara.start) : null;
+    if (offer && /[?.!]\s*$/.test(lastPara!.text)) {
+      flags += 1;
+      spans.push(offer);
+      notes.push(U === 'ru' ? 'В конце — предложение помочь дальше.' : 'Ends with an offer to help further.');
+    }
+    // Section labels interleaved with prose: the chat answer skeleton.
+    const lines = ctx.text.split('\n');
+    let labels = 0;
+    let off = 0;
+    for (let i = 0; i < lines.length; i++) {
+      const l = lines[i]!;
+      const next = lines.slice(i + 1).find((x) => x.trim());
+      if (l.trim() && SECTION_LINE.test(l) && l.split(/\s+/).length <= 8 && next && next.split(/\s+/).length > 8) {
+        labels++;
+        spans.push({ start: off, end: off + l.length, detector: 'S-07', label: l.trim() });
+      }
+      off += l.length + 1;
+    }
+    if (labels >= 2) {
+      flags += Math.min(1.5, labels * 0.4);
+      notes.push(U === 'ru' ? `Подзаголовков-ярлыков: ${labels}.` : `Section label lines: ${labels}.`);
+    }
+    return result('S-07', L, flags, { findings: [finding('S-07.assistant_answer', spans, { value: flags, extra: notes.join(' ') })] });
+  },
+};
+
+export const DETECTORS = [S01, S02, S03, S04, S05, S06, S07];

@@ -48,7 +48,7 @@ export function ReportPage(p: ReportPageProps) {
     <div className="report">
       <div className="toolbar" role="toolbar">
         {textual && (
-          <div className="seg" role="group" aria-label="mode">
+          <div className="seg" role="group" aria-label={t.modeLabel}>
             <button type="button" aria-pressed={mode === 'write'} onClick={() => setMode('write')}>{t.modeWrite}</button>
             <button type="button" aria-pressed={mode === 'edit'} onClick={() => setMode('edit')}>{t.modeEdit}</button>
           </div>

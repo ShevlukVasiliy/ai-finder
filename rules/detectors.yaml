@@ -208,6 +208,15 @@
   thresholds: { ru: { lo: 1, hi: 6 }, en: { lo: 0.5, hi: 5 } }
   corridor: { ru: [0, 2], en: [0, 1] }
   name: { ru: "Конструкция «не X, а Y»", en: "\"Not just X, it's Y\"" }
+- id: S-07
+  category: structure
+  kind: text
+  weight: 1.5
+  metric: assistant_flags
+  direction: up
+  thresholds: { ru: { lo: 0.5, hi: 3 }, en: { lo: 0.5, hi: 3 } }
+  corridor: { ru: [0, 0.5], en: [0, 0.5] }
+  name: { ru: "Жанр «ответ ассистента»", en: "Assistant-answer genre" }
 - id: P-01
   category: stats
   kind: text

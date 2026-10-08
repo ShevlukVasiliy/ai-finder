@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { LangSetting } from '../core/types';
 import { ReportPage } from './components/ReportPage';
 import { UploadDropzone } from './components/UploadDropzone';
@@ -8,6 +8,12 @@ import { useTheme } from './hooks/useTheme';
 import { DICTS, I18nContext } from './i18n';
 
 function uiLangDefault(): 'ru' | 'en' {
+  try {
+    const saved = localStorage.getItem('ai-finder:ui');
+    if (saved === 'ru' || saved === 'en') return saved;
+  } catch {
+    /* storage unavailable */
+  }
   return typeof navigator !== 'undefined' && /^ru|^uk|^be|^kk/i.test(navigator.language) ? 'ru' : 'en';
 }
 
@@ -18,6 +24,15 @@ export function App() {
   const { state, analyzeText, analyzeFile, setText, recheck, clean, reset } = useAnalysis(lang, ui);
   const t = DICTS[ui];
   const [draft, setDraft] = useState('');
+  useEffect(() => {
+    document.documentElement.lang = ui;
+    try {
+      localStorage.setItem('ai-finder:ui', ui);
+    } catch {
+      /* ignore */
+    }
+    document.title = t.docTitle;
+  }, [ui, t]);
   const notice = useMemo(() => {
     if (!state.notice) return undefined;
     const [r, d] = state.notice.split('/').map(Number);
@@ -27,7 +42,7 @@ export function App() {
 
   return (
     <I18nContext.Provider value={t}>
-      <a href="#main" className="sr-only skip">Skip</a>
+      <a href="#main" className="sr-only skip">{t.skip}</a>
       <header className="topbar">
         <div className="brand"><h1 className="logo">{t.appTitle}</h1><span className="brand-sub">{t.brandSub}</span></div>
         <div className="topbar-actions">
@@ -39,7 +54,7 @@ export function App() {
               <option value="en">EN</option>
             </select>
           </label>
-          <button type="button" className="ghost" onClick={() => setUi(ui === 'ru' ? 'en' : 'ru')} aria-label="UI language">
+          <button type="button" className="ghost" onClick={() => setUi(ui === 'ru' ? 'en' : 'ru')} aria-label={t.uiLang} title={t.uiLang}>
             {ui === 'ru' ? 'EN' : 'RU'}
           </button>
           <button type="button" className="ghost" onClick={toggle} aria-label={theme === 'dark' ? t.themeLight : t.themeDark} title={theme === 'dark' ? t.themeLight : t.themeDark}>

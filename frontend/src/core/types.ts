@@ -79,6 +79,8 @@ export interface TextContext {
   paragraphs: Paragraph[];
   words: { start: number; end: number; lower: string }[];
   isMarkdown: boolean;
+  /** Language for human-readable notes (UI language); defaults to `lang`. */
+  uiLang?: Lang;
 }
 
 export interface DocumentMeta {

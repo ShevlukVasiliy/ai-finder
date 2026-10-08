@@ -154,3 +154,70 @@ To improve sleep quality, it's important to establish a consistent sleep schedul
 Additionally, creating a sleep-friendly environment can make a significant difference. A cool, dark, and quiet bedroom promotes deeper, more restorative sleep. Limiting screen time before bed is also crucial.
 
 Ultimately, prioritizing sleep is an investment in overall health and productivity. By adopting healthy sleep habits, we can wake up refreshed and ready to embrace each day.
+===
+Short answer: yes, but not the way most tutorials suggest. Here's what I'd do in your situation.
+1. Start with the data you already have
+Before buying any tool, export your last three months of support tickets and tag them by topic. You'll probably find that 3–4 issues make up most of the volume.
+2. Fix the top issue first
+* If it's a product bug, that's an engineering task, not a support one.
+* If it's confusion, a short help article or an in-app hint usually cuts tickets by half.
+3. Only then automate
+Once the obvious stuff is gone, a chatbot or macros have much less to do — and they'll do it better.
+Bottom line: automation multiplies whatever process you already have. If the process is messy, you'll just get mess faster. If you share your ticket categories, I can help you prioritize.
+===
+Great question — this trips up a lot of people.
+The error happens because `fetch` returns a promise, and you're trying to read `.json()` before it resolves.
+Here are three ways to fix it, from quickest to cleanest:
+1. Add `await`: `const data = await res.json();`
+2. Chain `.then()` if you can't use async functions.
+3. Wrap it in a small helper that also handles non-200 responses, so you don't repeat the same checks everywhere.
+I'd go with option 3 if you call the API in more than one place. For a single call, option 1 is perfectly fine.
+Want me to show what that helper would look like with TypeScript types?
+===
+Here's a simple two-week plan to get comfortable with public speaking.
+Week 1 — low stakes
+- Record yourself explaining something you know well for 2 minutes. Watch it once, note one thing to improve.
+- Speak up once in every meeting, even if it's just a question.
+- Read one short article aloud each day to work on pacing.
+Week 2 — real practice
+- Volunteer for a 5-minute update at work.
+- Prepare three key points, not a script.
+- Rehearse out loud twice, ideally in front of a friend.
+A few things that help:
+* Slow down. Nerves make everyone talk faster.
+* Pauses feel long to you, but sound confident to the audience.
+Remember: the goal isn't to stop being nervous — it's to speak well while nervous. That gets easier with every repetition.
+===
+Sorry to hear that — a rejected visa application is stressful. Let's break down your options.
+What to do first
+Read the refusal letter carefully. It should list the specific grounds, and those determine everything else.
+Your options
+1. Reapply with stronger documents — usually the fastest route if the issue was missing paperwork or weak financial evidence.
+2. Request an administrative review — only makes sense if you believe the officer made a factual error.
+3. Appeal — available for some visa types, but slower and often requires a lawyer.
+What tends to help
+* A clear cover letter addressing each reason for refusal.
+* Bank statements covering at least six months.
+* Proof of ties to your home country (job, property, family).
+If you share the exact wording of the refusal, I can help you draft a response to each point.
+===
+Here's a polite but firm email you can send to your landlord:
+Hi Mark,
+I'm following up on the heating issue I reported on October 2. The radiator in the bedroom still isn't working, and temperatures at night are dropping below 60°F.
+Could you please arrange a repair by Friday, October 18? If that isn't possible, please let me know a specific date. Under our lease (section 7), essential repairs need to be addressed within a reasonable time.
+I'm happy to be flexible about access — just let me know what works for the technician.
+Thanks,
+Sam
+If you want it to sound softer, you can remove the reference to the lease — though keeping it signals you know your rights.
+===
+Good news: you don't need a new laptop for this. A few changes will likely fix the slowdown.
+Quick wins (10 minutes)
+1. Check startup apps and disable anything you don't use daily.
+2. Free up disk space — aim for at least 15% free on your main drive.
+3. Restart. Seriously, if it's been weeks, this alone helps.
+Bigger fixes (an hour)
+- Upgrade to 16 GB of RAM if your model allows it. This is the single biggest improvement for browser-heavy work.
+- Swap the hard drive for an SSD if you still have a spinning disk.
+When it's actually time to upgrade
+If it's more than seven years old or the battery is failing, replacement may be better value than repairs.
+Tell me the model and what you mostly use it for, and I'll suggest specific upgrades.

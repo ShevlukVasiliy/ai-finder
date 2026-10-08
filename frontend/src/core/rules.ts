@@ -57,6 +57,9 @@ export interface Lexicon {
   conclusion: Record<Lang, string[]>;
   summary_openers: Record<Lang, string[]>;
   template_headings: Record<Lang, string[]>;
+  assistant_openers: Record<Lang, string[]>;
+  assistant_recaps: Record<Lang, string[]>;
+  assistant_offers: Record<Lang, string[]>;
   chat_markers: string[];
 }
 
@@ -197,7 +200,7 @@ export function validateRules(raw: Record<keyof RuleSources, unknown>): string[]
 
   if (!isObj(raw.lexicon)) errors.push('lexicon: must be a mapping');
   else {
-    for (const key of ['hedges', 'nominal_suffixes', 'noise', 'conclusion', 'summary_openers', 'template_headings']) {
+    for (const key of ['hedges', 'nominal_suffixes', 'noise', 'conclusion', 'summary_openers', 'template_headings', 'assistant_openers', 'assistant_recaps', 'assistant_offers']) {
       const v = raw.lexicon[key];
       for (const lang of LANGS)
         if (!isObj(v) || !isStrArr(v[lang])) errors.push(`lexicon.${key}.${lang}: list of strings required`);

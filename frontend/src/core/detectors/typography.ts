@@ -104,7 +104,7 @@ const T03: Detector<TextContext> = {
     const extras: string[] = [];
     let bonus = 0;
     if (ellipsis > 0 && dots3 === 0) {
-      extras.push(ctx.lang === 'ru' ? 'Многоточие везде одним символом «…».' : 'Ellipsis is always the single “…” character.');
+      extras.push((ctx.uiLang ?? ctx.lang) === 'ru' ? 'Многоточие везде одним символом «…».' : 'Ellipsis is always the single “…” character.');
       bonus += 0.1;
     }
     const hyphenAsDash = (ctx.text.match(/\s-\s/g) ?? []).length;

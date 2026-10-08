@@ -29,3 +29,26 @@ I learned to drive stick at 34. My partner taught me, which in hindsight was a t
 The study was conducted between March and June 2018 at two outpatient clinics in Leeds. We recruited 112 adults with type 2 diabetes; 9 withdrew before the second visit, mostly due to scheduling conflicts, leaving 103 for analysis. Participants wore a continuous glucose monitor for 14 days and kept a food diary, though compliance with the diary was patchy — about a third of entries were incomplete, and we excluded days with fewer than two meals logged. Mean time-in-range was 61% (SD 14). We had expected a stronger association with breakfast timing than we found; the effect was there (r = 0.21) but smaller than in the pilot. One clinic switched glucose monitor brands in May, which we only noticed during analysis, and we report results with and without those participants.
 ===
 My dad was a terrible singer and didn't care at all. He sang in the car, in the shower, at the hardware store, once at a funeral (a hymn, but still, loudly, off-key). My brother and I were mortified for basically all of the nineties. He had maybe six songs he knew all the words to, and "Sweet Caroline" was the main one. He'd do the "bah bah bah" part at full volume at red lights with the windows down. People would stare. He'd wave. When he got sick, he couldn't sing much at the end, but the nurses put that song on for him once and he mouthed the bah bah bahs. I play it in the car now. I'm also a terrible singer. I've decided not to care either.
+===
+Since a few people asked in the group chat, here's how I got my old Canon printer working on the new wifi:
+1) found the reset button behind the little flap (took me 20 min to find it, it's tiny)
+2) held it for like 10 sec until the light blinked blue
+3) installed the Canon app on my phone and it found the printer right away
+Windows laptop was a pain though — it kept showing it offline. Ended up deleting it and adding it again by IP (192.168.0.41 in my case, check your router). My wife's Mac just worked, of course. Scanner still doesn't scan to email but honestly I never used that anyway.
+===
+Packing list for our Yosemite trip last August (2 adults, 1 kid, 4 nights car camping):
+- tent, pads, sleeping bags — it got down to 40°F at night, bring warmer bags than you think
+- camp stove + 2 fuel cans (used maybe 1.5)
+- bear canister, they DO check
+- headlamps
+- layers. so many layers.
+- first aid kit + moleskin, my son got blisters day one
+- food: oatmeal, pasta, tortillas, peanut butter, way too many granola bars
+Stuff we forgot: a lighter (borrowed one from the neighbors, thanks Linda) and enough water bottles. Total spend was around $300 not counting gas. Glacier Point at sunset was worth all of it.
+===
+OK here's my honest take on the standing desk thing after 2 years, since people keep asking:
+- the desk itself: fine. motor is loud-ish. the "memory" buttons are the only feature I use
+- standing: I do maybe 45 min a day, mostly during calls. Anything longer and my feet hurt
+- the mat: actually the best purchase, $40 on Amazon, don't skip it
+- my back: better? I think? Hard to say, I also started going to the gym around the same time
+Would I buy it again: yes, but I'd get a cheaper one. You don't need the $700 model. Also measure your monitor arm before ordering, mine hit the wall when the desk went up and I had to move the whole setup.

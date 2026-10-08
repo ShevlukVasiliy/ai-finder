@@ -178,3 +178,25 @@ describe('rhythm & structure specifics', () => {
     setModel('en', m);
   });
 });
+
+describe('S-07 assistant answer genre', () => {
+  it('flags framing, labels, recap and offer; not plain prose', () => {
+    const ai = `Короткий ответ: да, но не сразу. Объясню, что сделать в первую очередь и почему это важно для проекта.
+Шаг первый. Измерения
+Включи профилирование на неделю и посмотри, какие запросы тормозят сильнее всего, а потом составь список узких мест.
+Шаг второй. Оценка
+Посчитай, сколько займёт перенос схемы, данных и триггеров, и кто будет поддерживать новую базу ночью.
+Итого: начни с профилирования, а миграцию планируй на квартал. Если хочешь, помогу составить план.`;
+    const r = run('S-07', ai, 'ru');
+    expect(r.value).toBeGreaterThanOrEqual(3);
+    expect(r.findings[0]!.params.extra).toContain('Итоговая строка');
+    expect(run('S-07', sample('ru', false, 0), 'ru').value).toBe(0);
+    expect(run('S-07', 'short', 'en').applicable).toBe(false);
+  });
+
+  it('writes notes in the UI language', () => {
+    const c = { ...ctx(`Short answer: yes. ${'Some words to make it long enough for analysis here. '.repeat(10)}\nBottom line: do it.`, 'en'), uiLang: 'ru' as const };
+    const r = det('S-07').analyze(c);
+    expect(String(r.findings[0]?.params.extra ?? '')).toMatch(/Вступление|Итоговая/);
+  });
+});

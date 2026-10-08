@@ -40,3 +40,13 @@ chat_markers:
   - "this (?:code|script|function) (?:demonstrates|does the following|will)"
   - "вот (?:обновлённый|обновленный|исправленный|полный) код"
   - "пример использования:?"
+# S-07: жанр «ответ ассистента» — вступления, итоговые строки и предложения помочь дальше.
+assistant_openers:
+  ru: ["коротко:", "если коротко", "короткий ответ", "хороший вопрос", "отличный вопрос", "отличная идея", "понимаю,", "вот пошаговый", "вот план", "вот письмо", "вот что", "разберёмся", "разберемся", "расставил по порядку", "расставила по порядку", "от самого полезного", "от простого к", "для твоей ситуации", "для вашей ситуации", "в твоём случае", "в вашем случае"]
+  en: ["short answer", "great question", "good question", "good news", "sorry to hear", "here's a", "here's what", "here's how", "here are", "let's break", "in your situation", "from quickest to", "from simplest to", "in order of"]
+assistant_recaps:
+  ru: ["итого:", "итог:", "минимум, если", "главное —", "главное:", "что бы я выбрал", "я бы выбрал", "я бы начал", "совет напоследок", "и главное", "и мысль", "если коротко"]
+  en: ["bottom line", "tl;dr", "the short version", "i'd go with", "i'd start", "what i'd do", "remember:", "ultimately,", "the key is", "if you only"]
+assistant_offers:
+  ru: ["помогу", "подберу", "подскажу", "могу помочь", "если хочешь", "если хотите", "напиши, ", "покажи ", "расскажи "]
+  en: ["i can help", "i can suggest", "want me to", "let me know", "if you share", "tell me", "i'll suggest", "happy to help"]

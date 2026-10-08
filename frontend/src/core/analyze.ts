@@ -64,7 +64,7 @@ export function analyze(input: AnalysisInput): Report {
 
   if (input.kind === 'text' || input.kind === 'document') {
     if (text.length < LIMITS.minChars) warnings.push('short_text');
-    const ctx = buildContext(text, forced, input.document?.meta.format === 'md');
+    const ctx = { ...buildContext(text, forced, input.document?.meta.format === 'md'), uiLang: input.uiLang };
     sentences = ctx.sentences;
     results = runText(ctx);
     if (input.kind === 'document') {
