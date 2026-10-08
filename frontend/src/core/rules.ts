@@ -16,6 +16,8 @@ export interface DetectorSpec {
   thresholds: Record<Lang, { lo: number; hi: number }>;
   corridor: Record<Lang, [number, number]>;
   name: Record<Lang, string>;
+  /** false: weight is set by hand (no labelled data for this genre yet). */
+  calibrate?: boolean;
 }
 
 export interface AdviceText {
@@ -60,6 +62,7 @@ export interface Lexicon {
   assistant_openers: Record<Lang, string[]>;
   assistant_recaps: Record<Lang, string[]>;
   assistant_offers: Record<Lang, string[]>;
+  academic_markers: Record<Lang, string[]>;
   chat_markers: string[];
 }
 
@@ -134,6 +137,7 @@ export function validateRules(raw: Record<keyof RuleSources, unknown>): string[]
       if (!KINDS.includes(d.kind as ContentKind)) errors.push(`${w}.kind: unknown ${String(d.kind)}`);
       if (!isNum(d.weight) || d.weight < 0) errors.push(`${w}.weight: non-negative number required`);
       if (!isStr(d.metric)) errors.push(`${w}.metric: required`);
+      if (d.calibrate !== undefined && typeof d.calibrate !== 'boolean') errors.push(`${w}.calibrate: boolean`);
       if (d.direction !== 'up' && d.direction !== 'down') errors.push(`${w}.direction: up|down`);
       for (const lang of LANGS) {
         const t = isObj(d.thresholds) ? d.thresholds[lang] : undefined;
@@ -200,7 +204,7 @@ export function validateRules(raw: Record<keyof RuleSources, unknown>): string[]
 
   if (!isObj(raw.lexicon)) errors.push('lexicon: must be a mapping');
   else {
-    for (const key of ['hedges', 'nominal_suffixes', 'noise', 'conclusion', 'summary_openers', 'template_headings', 'assistant_openers', 'assistant_recaps', 'assistant_offers']) {
+    for (const key of ['hedges', 'nominal_suffixes', 'noise', 'conclusion', 'summary_openers', 'template_headings', 'assistant_openers', 'assistant_recaps', 'assistant_offers', 'academic_markers']) {
       const v = raw.lexicon[key];
       for (const lang of LANGS)
         if (!isObj(v) || !isStrArr(v[lang])) errors.push(`lexicon.${key}.${lang}: list of strings required`);

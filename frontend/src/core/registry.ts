@@ -1,3 +1,4 @@
+import { DETECTORS as ACADEMIC } from './detectors/academic';
 import { DETECTORS as CODE } from './detectors/code';
 import { DETECTORS as DOC } from './detectors/document';
 import { DETECTORS as IMAGE } from './detectors/image';
@@ -20,7 +21,7 @@ export interface Registry {
 }
 
 const registry: Registry = {
-  text: [...TYPO, ...RHYTHM, ...LEXICAL, ...STRUCTURE, ...STATS],
+  text: [...TYPO, ...RHYTHM, ...LEXICAL, ...STRUCTURE, ...ACADEMIC, ...STATS],
   document: [...DOC],
   image: [...IMAGE],
   code: [...CODE],

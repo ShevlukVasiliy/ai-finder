@@ -50,3 +50,7 @@ assistant_recaps:
 assistant_offers:
   ru: ["помогу", "подберу", "подскажу", "могу помочь", "если хочешь", "если хотите", "напиши, ", "покажи ", "расскажи "]
   en: ["i can help", "i can suggest", "want me to", "let me know", "if you share", "tell me", "i'll suggest", "happy to help"]
+# L-07: штампы сгенерированного академического текста (префиксы, без учёта регистра).
+academic_markers:
+  ru: ["фундаментальн", "принципиально ин", "детально раскры", "детально описа", "на стыке", "раскрывается механизм", "раскрывает механизм", "предельн", "в фундаментальном исследовании", "программн", "онтологическ", "кристаллизовал", "глубоко укоренивш", "лавинообразн", "демонстрирует устойчивое", "формулирует практический", "возвращающий", "нормативных правил", "приводит к фундаментальному выводу", "в противовес этому", "эту же закономерность", "эту закономерность"]
+  en: ["seminal", "foundational", "at the intersection of", "sheds light on", "shed light on", "nuanced", "underscores the", "a lens through which", "this paper argues", "it is worth noting", "plays a pivotal", "in the context of", "multifaceted", "paradigm shift", "lays the groundwork", "a growing body of"]

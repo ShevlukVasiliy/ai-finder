@@ -398,6 +398,61 @@ rules:
         - "Drop the framing opener (“Short answer:”, “Here's what I'd do”) and start with the point."
         - "Remove the recap line and the closing “want me to…” offer."
         - "Replace numbered sub-headings with connected prose or your own wording."
+  - id: B-01.citations
+    detector: B-01
+    target: phrases
+    effort: 2
+    expected_gain: 10
+    ru:
+      title: "Ссылки на источники выглядят механически"
+      explain: "{extra}"
+      actions:
+        - "Сверьте каждую цитату и номер страницы с первоисточником."
+        - "Ссылайтесь на конкретную страницу, а не на диапазон, если цитируете одну фразу."
+        - "Не обязательно цитировать каждый источник одинаково часто: опирайтесь на главные."
+    en:
+      title: "References look mechanical"
+      explain: "{extra}"
+      actions:
+        - "Check every quote and page number against the source."
+        - "Cite a specific page rather than a range when quoting one sentence."
+        - "Sources need not be cited equally often: lean on the key ones."
+  - id: S-08.uniform_sections
+    detector: S-08
+    target: phrases
+    effort: 3
+    expected_gain: 6
+    ru:
+      title: "Разделы собраны по одному шаблону"
+      explain: "{extra}"
+      actions:
+        - "Сделайте разделы разными по объёму и устройству: где-то разбор одного примера, где-то сравнение."
+        - "Оставьте жирное выделение только для ключевых терминов при первом упоминании."
+        - "Заполните поле автора, уберите LaTeX-формулы, если они не нужны по существу."
+    en:
+      title: "Sections follow one template"
+      explain: "{extra}"
+      actions:
+        - "Vary section size and shape: one may analyse a single example, another compare positions."
+        - "Keep bold only for key terms at first mention."
+        - "Fill in the author field; drop LaTeX formulas unless they are essential."
+  - id: L-07.attribution
+    detector: L-07
+    target: phrases
+    effort: 2
+    expected_gain: 5
+    ru:
+      title: "Много связок «автор показал» и академических штампов"
+      explain: "{extra} Например: «{phrase}»."
+      actions:
+        - "Не начинайте каждый абзац с авторитета: сначала своя мысль, затем ссылка."
+        - "Замените «фундаментальный», «детально раскрыл», «на стыке» конкретикой: что именно и где."
+    en:
+      title: "Many “author showed” links and academic clichés"
+      explain: "{extra} E.g. “{phrase}”."
+      actions:
+        - "Do not open every paragraph with an authority: state your point, then cite."
+        - "Replace “seminal”, “sheds light on” with specifics: what exactly and where."
   - id: P-01.low_perplexity
     detector: P-01
     target: sentences

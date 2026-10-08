@@ -17,7 +17,7 @@ await loadModels();
 const t0 = Date.now();
 
 const ids = getRules()
-  .detectors.filter((d) => d.kind === 'text')
+  .detectors.filter((d) => d.kind === 'text' && d.calibrate !== false)
   .map((d) => d.id);
 const features = (s: Sample) => {
   const r = analyze({ kind: 'text', text: s.text, lang: s.lang });

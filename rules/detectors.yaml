@@ -217,6 +217,36 @@
   thresholds: { ru: { lo: 0.5, hi: 3 }, en: { lo: 0.5, hi: 3 } }
   corridor: { ru: [0, 0.5], en: [0, 0.5] }
   name: { ru: "Жанр «ответ ассистента»", en: "Assistant-answer genre" }
+- id: S-08
+  category: structure
+  kind: text
+  weight: 1.6
+  calibrate: false
+  metric: section_flags
+  direction: up
+  thresholds: { ru: { lo: 0.5, hi: 2.5 }, en: { lo: 0.5, hi: 2.5 } }
+  corridor: { ru: [0, 0.5], en: [0, 0.5] }
+  name: { ru: "Разделы по одному шаблону", en: "Template-like sections" }
+- id: B-01
+  category: structure
+  kind: text
+  weight: 2.2
+  calibrate: false
+  metric: citation_flags
+  direction: up
+  thresholds: { ru: { lo: 0.5, hi: 2.5 }, en: { lo: 0.5, hi: 2.5 } }
+  corridor: { ru: [0, 0.5], en: [0, 0.5] }
+  name: { ru: "Ссылки на источники", en: "Source references" }
+- id: L-07
+  category: lexicon
+  kind: text
+  weight: 1.4
+  calibrate: false
+  metric: attribution_density
+  direction: up
+  thresholds: { ru: { lo: 4, hi: 14 }, en: { lo: 4, hi: 14 } }
+  corridor: { ru: [0, 4], en: [0, 4] }
+  name: { ru: "«Автор показал»: связки и академические штампы", en: "“Author showed” links and academic clichés" }
 - id: P-01
   category: stats
   kind: text
