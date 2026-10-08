@@ -32,7 +32,7 @@ pnpm dev
 | `pnpm fixtures` | пересоздать файлы-фикстуры (DOCX, ODT, RTF, PDF, PNG, JPEG, WebP, код) |
 | `pnpm train` | переобучить n-граммные модели по выдержкам из Википедии |
 
-См. также [docs/DEPLOY.md](docs/DEPLOY.md), [docs/DECISIONS.md](docs/DECISIONS.md), [docs/PROGRESS.md](docs/PROGRESS.md).
+См. также [docs/SCIENTIFIC_BASIS.md](docs/SCIENTIFIC_BASIS.md) (научная база и методология), [docs/DEPLOY.md](docs/DEPLOY.md), [docs/DECISIONS.md](docs/DECISIONS.md), [docs/PROGRESS.md](docs/PROGRESS.md).
 
 ## Данные и лицензии
 

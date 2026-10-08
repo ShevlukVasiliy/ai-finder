@@ -144,3 +144,14 @@ describe('hooks and helpers', () => {
     await waitFor(() => expect(again.result.current.state.history.length).toBe(1));
   });
 });
+
+describe('App footer', () => {
+  it('is shown on the home page and on the report page', async () => {
+    render(<App />);
+    expect(screen.getByRole('button', { name: 'Научная база' })).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText(/Вставьте текст/), { target: { value: sample('ru', true, 0) } });
+    await userEvent.click(screen.getByRole('button', { name: 'Проверить' }));
+    await screen.findByRole('button', { name: 'Перепроверить' });
+    expect(screen.getByRole('button', { name: 'Научная база' })).toBeInTheDocument();
+  });
+});

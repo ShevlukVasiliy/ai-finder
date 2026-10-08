@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { LangSetting } from '../core/types';
+import { Footer } from './components/Footer';
 import { ReportPage } from './components/ReportPage';
 import { UploadDropzone } from './components/UploadDropzone';
 import { download, exportPdf, reportJson } from './export';
@@ -106,6 +107,7 @@ export function App() {
           </div>
         )}
       </main>
+      <Footer />
     </I18nContext.Provider>
   );
 }

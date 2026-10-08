@@ -214,3 +214,22 @@ main { max-width: 1200px; margin: 0 auto; padding: 16px 20px 40px; }
   .report-grid { grid-template-columns: 1fr; }
   .report-side { position: static; max-height: none; overflow: visible; }
 }
+
+/* Footer + methodology dialog */
+.site-footer { max-width: 1200px; margin: 0 auto; padding: 12px 20px 20px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; font-size: 13px; color: var(--muted); }
+.footer-links { display: flex; gap: 12px; align-items: center; }
+.site-footer a, .modal a { color: var(--text-2); text-underline-offset: 3px; }
+.site-footer button.link { min-height: 0; padding: 0; font-size: 13px; color: var(--text-2); }
+@media (max-width: 560px) { .site-footer { padding: 12px; flex-direction: column; } }
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45); display: flex; align-items: flex-start; justify-content: center; padding: 6vh 12px 12px; z-index: 10; overflow: auto; }
+.modal { background: var(--bg); color: var(--text); border: 1px solid var(--line-2); border-radius: 6px; max-width: 640px; width: 100%; padding: 16px 18px; word-break: break-word; overflow-wrap: break-word; }
+.modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.modal-head h2 { font-size: 18px; margin: 0; }
+.modal-close { font-size: 20px; line-height: 1; min-width: 34px; }
+.modal-intro { font-size: 14px; color: var(--text-2); }
+.principles { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.principles h3 { font-size: 15px; margin: 0 0 2px; }
+.principles p { margin: 0; font-size: 14px; }
+.principles .refs { font-size: 13px; margin-top: 2px; }
+.modal-foot { margin: 14px 0 0; font-size: 13px; border-top: 1px solid var(--line); padding-top: 10px; }
+@media print { .site-footer { display: none; } }

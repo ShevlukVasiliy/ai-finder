@@ -74,3 +74,13 @@ test('theme toggle and disclaimer', async ({ page }) => {
   await expect(page.locator('html')).toHaveAttribute('data-theme', /dark|light/);
   await expect(page.getByText(/ложные срабатывания возможны/)).toBeVisible();
 });
+
+test('footer and methodology dialog', async ({ page }) => {
+  await expect(page.getByText(/Анализ в браузере/)).toBeVisible();
+  await page.getByRole('button', { name: 'Научная база' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Научная база и методология' });
+  await expect(dialog).toBeVisible();
+  await expect(page.getByRole('link', { name: /Tian/ })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(dialog).not.toBeVisible();
+});
