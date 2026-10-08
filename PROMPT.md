@@ -9,8 +9,8 @@
 
 ## Стек
 
-- **Только фронтенд, без бэкенда:** React + TypeScript + Vite, Tiptap для редактора с подсветкой, Vitest + Testing Library + fast-check, Playwright для e2e, Storybook 8. Весь анализ выполняется в браузере.
-- **Монорепо:** `frontend/`, `rules/` (YAML со словарями, порогами и советами), `infra/`, `.github/workflows/`, `docs/`.
+- **Только фронтенд, без бэкенда:** React + TypeScript + Vite, Tiptap для редактора с подсветкой, Vitest + Testing Library + fast-check, Playwright для e2e. Весь анализ выполняется в браузере.
+- **Монорепо:** `frontend/`, `rules/` (YAML со словарями, порогами и советами), `.github/workflows/`, `docs/`.
 
 ## Тесты — обязательны на каждое действие
 
@@ -25,33 +25,16 @@
 - **Регрессия качества:** `frontend/tests/quality/` с мини-корпусом размеченных текстов. Тест проверяет ROC-AUC ≥ 0,8 и FPR на человеческих текстах ≤ 10 % на этом корпусе.
 - **Покрытие:** ядро анализа ≥ 85 %, UI ≥ 80 %. Порог зашит в CI, и при недоборе CI падает.
 
-## Storybook
-
-Нужны stories на все ключевые элементы UI, каждая во всех состояниях (loading, empty, error, данные, длинные данные), в светлой и тёмной теме, на мобильной ширине:
-- `ScoreGauge` — итоговый score с вердиктом и бейджем достоверности;
-- `CategoryBreakdown`;
-- `HighlightedEditor` — редактор с подсветкой и тултипами находок;
-- `AdviceCard`, `AdviceList` (с фильтрами), `TopAdvice` (топ-3);
-- `MetricCorridor` — шкала «текущее значение vs человеческий коридор»;
-- `UploadDropzone`;
-- `RecheckDiff` — что было → стало;
-- `ImageReport` (превью, метаданные, тепловая карта);
-- `DocumentMetaTable`;
-- `ReportPage` — целиком, на моках.
-
-Дополнительно: addon-a11y без ошибок, interaction tests (`play`) для интерактивных компонентов, запуск `test-storybook` в CI. Storybook собирается и деплоится вместе с фронтом по пути `/storybook/`.
-
 ## Деплой в Yandex Cloud
 
 Архитектура:
-- **Frontend и Storybook:** статика в **Object Storage**, бакет с хостингом сайта (index и error-документ — `index.html` для SPA). Storybook лежит по пути `/storybook/`.
+- **Frontend:** статика в приватном бакете **Object Storage**, отдаётся через **API Gateway** (`/{path+}` → object_storage, fallback на `index.html` для SPA).
 - **Облако:** `general`, каталог `default`.
-- **Инфраструктура как код:** Terraform (провайдер yandex-cloud) в `infra/terraform/`: бакет сайта и сервисный аккаунт для деплоя с минимальными ролями. Стейт хранится в бакете Object Storage (S3-backend).
+- **Инфраструктура:** без Terraform. Бакет и сервисный аккаунт для деплоя создаются один раз командами `yc` (описаны в `docs/DEPLOY.md`).
 
 GitHub Actions в `.github/workflows/`:
-1. `ci.yml` — на каждый PR и push: lint, typecheck, юнит-тесты и покрытие с порогами, сборка Storybook и `test-storybook`, e2e Playwright, `terraform fmt -check` и `validate`.
-2. `deploy.yml` — на push в `main` после зелёного CI: сборка и `aws s3 sync` фронта и Storybook в бакет (endpoint `https://storage.yandexcloud.net`), **smoke-тест** после деплоя: `/` и `/storybook/` отдают 200, а анализ работает в headless-браузере. Если smoke-тест не прошёл, предыдущая сборка восстанавливается из бакета (каталог `releases/<sha>`).
-3. `infra.yml` — `terraform plan` в PR (с комментарием плана), `apply` по ручному запуску (`workflow_dispatch`) с environment approval.
+1. `ci.yml` — на каждый PR и push: lint, typecheck, юнит-тесты и покрытие с порогами, e2e Playwright.
+2. `deploy.yml` — на push в `main` после зелёного CI: сборка и `aws s3 sync` фронта в бакет (endpoint `https://storage.yandexcloud.net`), **smoke-тест** после деплоя: `/` и ассеты отдают 200 через шлюз, а анализ работает в headless-браузере. Если smoke-тест не прошёл, предыдущая сборка восстанавливается из бакета (каталог `releases/<sha>`).
 
 Авторизация в облаке — через Workload Identity Federation (OIDC GitHub → сервисный аккаунт), если получится, иначе через авторизованный ключ в секретах. Список нужных секретов и переменных (`YC_CLOUD_ID`, `YC_FOLDER_ID` и т. д.) и пошаговую инструкцию первичной настройки опиши в `docs/DEPLOY.md`.
 
@@ -60,11 +43,10 @@ GitHub Actions в `.github/workflows/`:
 Иди по этапам из раздела 13 ТЗ. На каждом этапе:
 1. Короткий план в `docs/PROGRESS.md`.
 2. Тесты → реализация → прогон всех тестов локально.
-3. Stories для новых UI-элементов.
-4. Коммит с понятным сообщением (conventional commits). Один этап — одна или несколько логичных веток/PR.
-5. Отметка в `docs/PROGRESS.md`: что сделано, что отложено и почему.
+3. Коммит с понятным сообщением (conventional commits). Один этап — одна или несколько логичных веток/PR.
+4. Отметка в `docs/PROGRESS.md`: что сделано, что отложено и почему.
 
-Начни с каркаса: монорепо, линтеры, пустые CI и deploy-пайплайны, Terraform. Деплой «hello world» должен заработать раньше бизнес-логики, чтобы дальше каждый этап сразу выкатывался.
+Начни с каркаса: монорепо, линтеры, пустые CI и deploy-пайплайны. Деплой «hello world» должен заработать раньше бизнес-логики, чтобы дальше каждый этап сразу выкатывался.
 
 Если тест падает — чини код, а не тест. Тест разрешено менять, только если он объективно неверен; причину зафиксируй в коммите. Не помечай задачу выполненной, пока тесты не зелёные.
 
@@ -72,10 +54,9 @@ GitHub Actions в `.github/workflows/`:
 
 - [ ] Все этапы 1–6 из ТЗ реализованы.
 - [ ] Все детекторы из ТЗ (T, R, L, S, P, D, I, C) работают и покрыты тестами; советы есть для каждого из них на RU и EN.
-- [ ] CI зелёный: lint, types, unit, coverage-пороги, storybook-тесты, e2e, terraform validate.
-- [ ] Storybook со всеми перечисленными компонентами задеплоен и открывается по `/storybook/`.
-- [ ] Прод задеплоен через GitHub Actions в Yandex Cloud: фронт и Storybook в Object Storage; smoke-тест после деплоя проходит.
+- [ ] CI зелёный: lint, types, unit, coverage-пороги, e2e.
+- [ ] Прод задеплоен через GitHub Actions в Yandex Cloud: фронт в Object Storage за API Gateway; smoke-тест после деплоя проходит.
 - [ ] `README.md` (запуск локально одной командой `pnpm dev`), `docs/DEPLOY.md`, `docs/DECISIONS.md`, `docs/PROGRESS.md` актуальны.
 - [ ] Регрессия качества на корпусе проходит пороги.
 
-Когда всё готово, дай итоговый отчёт: URL прода и Storybook, метрики качества, покрытие, список отложенного.
+Когда всё готово, дай итоговый отчёт: URL прода, метрики качества, покрытие, список отложенного.

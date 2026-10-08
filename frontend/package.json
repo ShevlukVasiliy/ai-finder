@@ -5,20 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc --noEmit -p . && vite build",
     "preview": "vite preview --port 4173",
     "lint": "eslint .",
-    "typecheck": "tsc -b --noEmit",
+    "typecheck": "tsc --noEmit -p .",
     "test": "vitest run",
     "test:cov": "vitest run --coverage",
     "e2e": "playwright test",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build -o storybook-static",
-    "test-storybook": "test-storybook",
     "fixtures": "vite-node ../scripts/make_fixtures.ts",
     "calibrate": "vite-node ../scripts/calibrate.ts",
-    "train": "tsx ../scripts/train_ngram.ts",
-    "test-storybook:ci": "concurrently -k -s first -n SB,TEST \"http-server storybook-static -p 6106 --silent\" \"wait-on tcp:127.0.0.1:6106 && test-storybook --url http://127.0.0.1:6106 --maxWorkers=2\""
+    "train": "tsx ../scripts/train_ngram.ts"
   },
   "dependencies": {
     "@tiptap/core": "^3.31.4",
@@ -34,14 +30,6 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.63.0",
-    "@storybook/addon-a11y": "^8.6.18",
-    "@storybook/addon-essentials": "^8.6.14",
-    "@storybook/addon-interactions": "^8.6.14",
-    "@storybook/addon-themes": "^8.6.18",
-    "@storybook/react": "^8.6.18",
-    "@storybook/react-vite": "^8.6.18",
-    "@storybook/test": "^8.6.15",
-    "@storybook/test-runner": "^0.21.3",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",
@@ -51,22 +39,17 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^4.7.0",
     "@vitest/coverage-v8": "^3.2.7",
-    "axe-playwright": "^2.2.2",
-    "concurrently": "^10.0.5",
     "eslint": "^10.12.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "fast-check": "^4.10.2",
     "globals": "^17.13.0",
-    "http-server": "^14.1.1",
     "jsdom": "^30.1.2",
     "pdf-lib": "^1.17.1",
-    "storybook": "^8.6.18",
     "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.71.1",
     "vite": "^6.4.4",
     "vite-node": "^3.2.4",
-    "vitest": "^3.2.7",
-    "wait-on": "^9.5.1"
+    "vitest": "^3.2.7"
   }
 }

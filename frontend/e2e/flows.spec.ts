@@ -70,7 +70,7 @@ test('code: upload .py → report → remove chat markers → recheck', async ({
 });
 
 test('theme toggle and disclaimer', async ({ page }) => {
-  await page.getByRole('button', { name: /тема/ }).click();
+  await page.getByRole('button', { name: /Тёмная|Светлая/ }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', /dark|light/);
   await expect(page.getByText(/ложные срабатывания возможны/)).toBeVisible();
 });

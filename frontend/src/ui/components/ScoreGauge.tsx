@@ -14,16 +14,21 @@ export function ScoreGauge({ score, verdict, confidence, loading, error }: Score
   if (loading) return <section className="card gauge" aria-busy="true"><div className="skeleton gauge-skel" />{t.loading}</section>;
   if (error) return <section className="card gauge" role="alert"><strong>{t.error}</strong><p>{error}</p></section>;
   if (score === undefined || !verdict) return <section className="card gauge muted">{t.empty}</section>;
-  const r = 52;
-  const c = Math.PI * r;
   const pct = Math.max(0, Math.min(100, score));
   return (
     <section className={`card gauge v-${verdict}`} aria-label={t.score}>
-      <svg viewBox="0 0 120 70" className="gauge-svg" role="img" aria-label={`${t.score}: ${Math.round(pct)}`}>
-        <path d="M8 62 A52 52 0 0 1 112 62" className="gauge-track" />
-        <path d="M8 62 A52 52 0 0 1 112 62" className="gauge-fill" strokeDasharray={`${(c * pct) / 100} ${c}`} />
-        <text x="60" y="58" textAnchor="middle" className="gauge-num">{Math.round(pct)}</text>
-      </svg>
+      <div className="gauge-label">{t.score}</div>
+      <div className="gauge-row">
+        <span className="gauge-num">{Math.round(pct)}</span>
+        <span className="gauge-of">/100</span>
+      </div>
+      <div className="gauge-scale" role="img" aria-label={`${t.score}: ${Math.round(pct)}`}>
+        <span className="gauge-zone z-human" />
+        <span className="gauge-zone z-mixed" />
+        <span className="gauge-zone z-ai" />
+        <span className="gauge-pin" style={{ left: `${pct}%` }} />
+      </div>
+      <div className="gauge-ticks" aria-hidden="true"><span>0</span><span>35</span><span>65</span><span>100</span></div>
       <div className="gauge-verdict">{t.verdict[verdict]}</div>
       {confidence && (
         <div className="gauge-conf">

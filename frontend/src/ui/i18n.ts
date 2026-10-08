@@ -3,6 +3,7 @@ import type { Category, Lang } from '../core/types';
 
 const ru = {
   appTitle: 'AI-Finder',
+  brandSub: 'корректура против машинного стиля',
   tagline: 'Проверка текста, документов, изображений и кода на признаки генерации. Всё считается в вашем браузере.',
   inputPlaceholder: 'Вставьте текст (от 300 символов) или код…',
   analyze: 'Проверить',
@@ -14,8 +15,8 @@ const ru = {
   newCheck: 'Новая проверка',
   langLabel: 'Язык текста',
   langAuto: 'Авто',
-  themeLight: 'Светлая тема',
-  themeDark: 'Тёмная тема',
+  themeLight: 'Светлая',
+  themeDark: 'Тёмная',
   dropTitle: 'Перетащите файл сюда',
   dropHint: 'или нажмите, чтобы выбрать. DOCX, PDF, TXT, MD, ODT, RTF, JPEG, PNG, WebP, код. До 20 МБ.',
   dropActive: 'Отпустите, чтобы загрузить',
@@ -88,6 +89,7 @@ type Dict = typeof ru;
 
 const en: Dict = {
   ...ru,
+  brandSub: 'a proofreader for machine-made prose',
   tagline: 'Checks text, documents, images and code for signs of AI generation. Everything runs in your browser.',
   inputPlaceholder: 'Paste text (300+ characters) or code…',
   analyze: 'Analyse',
@@ -99,8 +101,8 @@ const en: Dict = {
   newCheck: 'New check',
   langLabel: 'Text language',
   langAuto: 'Auto',
-  themeLight: 'Light theme',
-  themeDark: 'Dark theme',
+  themeLight: 'Light',
+  themeDark: 'Dark',
   dropTitle: 'Drop a file here',
   dropHint: 'or click to choose. DOCX, PDF, TXT, MD, ODT, RTF, JPEG, PNG, WebP, code. Up to 20 MB.',
   dropActive: 'Release to upload',

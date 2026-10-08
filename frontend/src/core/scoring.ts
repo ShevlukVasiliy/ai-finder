@@ -93,7 +93,8 @@ export function sentenceScores(
   return sentences.map((s) => {
     let heat = 0;
     for (const sp of spans) if (sp.start < s.end && sp.end > s.start) heat += sp.w * 0.12;
-    const score = Math.min(1, (overall / 100) * 0.5 + heat);
+    // Overall level contributes a little; the heat map should point at specific sentences.
+    const score = Math.min(1, (overall / 100) * 0.15 + heat * 0.6);
     return { start: s.start, end: s.end, score: Math.round(score * 100) / 100 };
   });
 }

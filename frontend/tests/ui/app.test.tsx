@@ -57,7 +57,7 @@ describe('App user flows', () => {
 
   it('theme toggle, UI language and content language switch', async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole('button', { name: 'Тёмная тема' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Тёмная' }));
     expect(document.documentElement.dataset.theme).toBe('dark');
     await userEvent.selectOptions(screen.getByLabelText('Язык текста'), 'en');
     await userEvent.click(screen.getByRole('button', { name: 'UI language' }));

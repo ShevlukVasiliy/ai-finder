@@ -1,0 +1,29 @@
+openapi: 3.0.0
+info:
+  title: ai-finder
+  version: 1.0.0
+# Single entry point: the SPA is served from the private site bucket.
+# ${BUCKET} and ${SA_ID} are substituted by infra/setup.sh and the deploy workflow.
+paths:
+  /:
+    get:
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: ${BUCKET}
+        object: index.html
+        service_account_id: ${SA_ID}
+  /{path+}:
+    get:
+      parameters:
+        - name: path
+          in: path
+          required: true
+          schema:
+            type: string
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: ${BUCKET}
+        object: '{path}'
+        # SPA fallback: unknown routes render the app.
+        error_object: index.html
+        service_account_id: ${SA_ID}

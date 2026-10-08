@@ -29,7 +29,7 @@ export function App() {
     <I18nContext.Provider value={t}>
       <a href="#main" className="sr-only skip">Skip</a>
       <header className="topbar">
-        <h1 className="logo">{t.appTitle}</h1>
+        <div className="brand"><h1 className="logo">{t.appTitle}</h1><span className="brand-sub">{t.brandSub}</span></div>
         <div className="topbar-actions">
           <label className="inline">
             <span>{t.langLabel}</span>
@@ -43,7 +43,7 @@ export function App() {
             {ui === 'ru' ? 'EN' : 'RU'}
           </button>
           <button type="button" className="ghost" onClick={toggle} aria-label={theme === 'dark' ? t.themeLight : t.themeDark} title={theme === 'dark' ? t.themeLight : t.themeDark}>
-            {theme === 'dark' ? '☀' : '☾'}
+            {theme === 'dark' ? t.themeLight : t.themeDark}
           </button>
         </div>
       </header>
