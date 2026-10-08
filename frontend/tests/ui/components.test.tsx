@@ -197,7 +197,8 @@ describe('ReportPage', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Экспорт PDF' }));
     await userEvent.click(screen.getByRole('button', { name: 'Новая проверка' }));
     for (const f of Object.values(h)) expect(f).toHaveBeenCalledTimes(1);
-    await userEvent.click(screen.getAllByRole('button', { name: r.advice[0]!.title })[0]!);
+    const esc = r.advice[0]!.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    await userEvent.click(screen.getAllByRole('button', { name: new RegExp(esc) })[0]!);
     expect(screen.getByRole('status')).toHaveTextContent('cleaned');
   });
 

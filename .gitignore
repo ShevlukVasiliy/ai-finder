@@ -9,3 +9,4 @@ test-results/
 .DS_Store
 *.key.json
 infra/.secrets/
+frontend/tests/quality/external/train.jsonl.gz

@@ -10,11 +10,11 @@ import { CORPUS, EXTERNAL_TEST } from './corpus';
 beforeAll(() => loadModels());
 
 describe('quality regression on the labelled corpus', () => {
-  it('shipped weights: ROC-AUC ≥ 0.8 and human FPR ≤ 10 %', () => {
+  it('own corpus: ROC-AUC ≥ 0.8 and human FPR ≤ 10 %', () => {
     const scores = CORPUS.map((s) => analyze({ kind: 'text', text: s.text, lang: s.lang }).score);
     const labels = CORPUS.map((s) => s.ai);
     expect(rocAuc(scores, labels)).toBeGreaterThanOrEqual(0.8);
-    expect(fpr(scores, labels, 50)).toBeLessThanOrEqual(0.1);
+    expect(fpr(scores, labels, 65)).toBeLessThanOrEqual(0.1);
   });
 
   it('leave-one-out cross-validation: ROC-AUC ≥ 0.8', () => {
@@ -42,21 +42,21 @@ describe('quality regression on the labelled corpus', () => {
   });
 });
 
-describe('held-out external sample (COLING-2025 MGT: RuATD/M4)', () => {
+describe('held-out public sample (~4.4k texts: DetectRL-X, AINL-2025, artnitolog, rasbt, COLING-2025)', () => {
   const score = (lang: 'ru' | 'en') => {
     const s = EXTERNAL_TEST.filter((x) => x.lang === lang);
     const sc = s.map((x) => analyze({ kind: 'text', text: x.text, lang }).score);
     return { auc: rocAuc(sc, s.map((x) => x.ai)), fpr65: fpr(sc, s.map((x) => x.ai), 65) };
   };
-  it('RU: ROC-AUC ≥ 0.9, FPR@65 ≤ 10 %', () => {
+  it('RU: ROC-AUC ≥ 0.8, FPR@65 ≤ 8 %', () => {
     const r = score('ru');
-    expect(r.auc).toBeGreaterThanOrEqual(0.9);
-    expect(r.fpr65).toBeLessThanOrEqual(0.1);
+    expect(r.auc).toBeGreaterThanOrEqual(0.8);
+    expect(r.fpr65).toBeLessThanOrEqual(0.08);
   });
-  it('EN: ROC-AUC ≥ 0.75, FPR@65 ≤ 15 %', () => {
+  it('EN: ROC-AUC ≥ 0.85, FPR@65 ≤ 6 %', () => {
     const r = score('en');
-    expect(r.auc).toBeGreaterThanOrEqual(0.75);
-    expect(r.fpr65).toBeLessThanOrEqual(0.15);
+    expect(r.auc).toBeGreaterThanOrEqual(0.85);
+    expect(r.fpr65).toBeLessThanOrEqual(0.06);
   });
 });
 

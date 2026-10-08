@@ -1,9 +1,10 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { gunzipSync } from 'node:zlib';
 import enAi from './corpus/en-ai.txt?raw';
 import enHuman from './corpus/en-human.txt?raw';
 import ruAi from './corpus/ru-ai.txt?raw';
 import ruHuman from './corpus/ru-human.txt?raw';
-import extEn from './external/en.jsonl?raw';
-import extRu from './external/ru.jsonl?raw';
 import type { Lang } from '../../src/core/types';
 
 export interface Sample {
@@ -27,20 +28,27 @@ export const CORPUS: Sample[] = [
   ...split(enAi).map((text) => ({ lang: 'en' as const, ai: true, text, origin: 'own' as const })),
 ];
 
-const jsonl = (src: string, lang: Lang): Sample[] =>
-  src
+const EXT_DIR = join(__dirname, 'external');
+
+/** gzipped JSONL built by scripts/build_dataset.py: {lang, ai, model, source, text}. */
+export interface ExternalSample extends Sample {
+  model: string;
+  source: string;
+}
+
+function loadExternal(name: string): ExternalSample[] {
+  const file = join(EXT_DIR, `${name}.jsonl.gz`);
+  if (!existsSync(file)) return [];
+  return gunzipSync(readFileSync(file))
+    .toString('utf8')
     .split('\n')
     .filter(Boolean)
-    .map((l) => JSON.parse(l) as { ai: boolean; text: string })
-    .map((r) => ({ lang, ai: r.ai, text: r.text, origin: 'external' as const }));
+    .map((l) => ({ ...(JSON.parse(l) as Omit<ExternalSample, 'origin'>), origin: 'external' as const }));
+}
 
 /**
- * Sample of COLING-2025 MGT (multilingual) — RuATD/M4 human texts vs gpt-3.5/4, Llama-3, Mixtral, Gemma, Cohere.
- * Even rows calibrate the weights, odd rows are a held-out check.
+ * ~22k public texts (DetectRL-X 2026: GPT-4o, Gemini-2.5, DeepSeek-V3, Qwen-Max; AINL-Eval-2025; artnitolog;
+ * rasbt human-vs-ai-50k; COLING-2025 MGT). The test split is committed; the train split is regenerated locally.
  */
-const EXTERNAL = [...jsonl(extRu, 'ru'), ...jsonl(extEn, 'en')];
-export const EXTERNAL_TRAIN = EXTERNAL.filter((_, i) => i % 2 === 0);
-export const EXTERNAL_TEST = EXTERNAL.filter((_, i) => i % 2 === 1);
-
-/** Own corpus counts twice: it is the only source of modern chat-assistant answers. */
-export const TRAINING = [...CORPUS, ...CORPUS, ...EXTERNAL_TRAIN];
+export const EXTERNAL_TEST = loadExternal('test');
+export const EXTERNAL_TRAIN = loadExternal('train');

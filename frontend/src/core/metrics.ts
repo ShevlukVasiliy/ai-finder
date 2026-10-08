@@ -33,9 +33,11 @@ export function f1(scores: number[], labels: boolean[], threshold: number): numb
 export function fitLogistic(
   X: number[][],
   y: number[],
-  opts: { l2?: number; lr?: number; epochs?: number } = {},
+  opts: { l2?: number; lr?: number; epochs?: number; sampleWeights?: number[] } = {},
 ): { bias: number; weights: number[] } {
-  const { l2 = 0.02, lr = 0.5, epochs = 4000 } = opts;
+  const { l2 = 0.02, lr = 0.5, epochs = 4000, sampleWeights } = opts;
+  const sw = sampleWeights ?? X.map(() => 1);
+  const total = sw.reduce((a, b) => a + b, 0) || 1;
   const d = X[0]?.length ?? 0;
   const w = new Array<number>(d).fill(0.5);
   let b = 0;
@@ -47,12 +49,12 @@ export function fitLogistic(
       const xi = X[i]!;
       let z = b;
       for (let j = 0; j < d; j++) z += w[j]! * xi[j]!;
-      const err = 1 / (1 + Math.exp(-z)) - y[i]!;
+      const err = (1 / (1 + Math.exp(-z)) - y[i]!) * sw[i]!;
       gb += err;
       for (let j = 0; j < d; j++) gw[j]! += err * xi[j]!;
     }
-    b -= (lr * gb) / n;
-    for (let j = 0; j < d; j++) w[j] = Math.max(0, w[j]! - lr * (gw[j]! / n + l2 * w[j]!));
+    b -= (lr * gb) / total;
+    for (let j = 0; j < d; j++) w[j] = Math.max(0, w[j]! - lr * (gw[j]! / total + l2 * w[j]!));
   }
   return { bias: b, weights: w };
 }
