@@ -6,7 +6,7 @@ export function RecheckDiff({ diff, titles = {} }: { diff: ReportDiff; titles?: 
   const delta = diff.scoreAfter - diff.scoreBefore;
   const name = (id: string) => titles[id] ?? id;
   return (
-    <section className="card diff" aria-live="polite">
+    <section className="block diff" aria-live="polite">
       <h3>{t.diffTitle}</h3>
       <p className="diff-score">
         {t.score}: {Math.round(diff.scoreBefore)} → <strong>{Math.round(diff.scoreAfter)}</strong>{' '}

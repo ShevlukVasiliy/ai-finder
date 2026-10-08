@@ -29,42 +29,60 @@ export interface ReportPageProps {
 export function ReportPage(p: ReportPageProps) {
   const t = useT();
   const [active, setActive] = useState<string>();
+  const [hidden, setHidden] = useState<Set<string>>(() => new Set());
+  const [mode, setMode] = useState<'edit' | 'write'>('edit');
   const r = p.report;
   const focus = (a: AdviceItem) => setActive((x) => (x === a.id ? undefined : a.id));
+  const toggleHidden = (a: AdviceItem) =>
+    setHidden((h) => {
+      const n = new Set(h);
+      if (n.has(a.id)) n.delete(a.id);
+      else n.add(a.id);
+      return n;
+    });
   const hasAutofix = r.advice.some((a) => a.autofix);
-  const titles = Object.fromEntries(
-    r.advice.flatMap((a) => [[a.id, a.title], ...a.detectors.map((d) => [d, a.title])]),
-  ) as Record<string, string>;
+  const titles = Object.fromEntries(r.advice.flatMap((a) => [[a.id, a.title], ...a.detectors.map((d) => [d, a.title])])) as Record<string, string>;
   const textual = r.kind !== 'image';
+  const words = textual ? (r.text.match(/[\p{L}\p{N}]+/gu) ?? []).length : undefined;
   return (
     <div className="report">
       <div className="toolbar" role="toolbar">
+        {textual && (
+          <div className="seg" role="group" aria-label="mode">
+            <button type="button" aria-pressed={mode === 'write'} onClick={() => setMode('write')}>{t.modeWrite}</button>
+            <button type="button" aria-pressed={mode === 'edit'} onClick={() => setMode('edit')}>{t.modeEdit}</button>
+          </div>
+        )}
+        <span className="toolbar-gap" />
         {textual && <button type="button" className="primary" onClick={p.onRecheck} disabled={p.loading}>{p.loading ? t.analyzing : t.recheck}</button>}
         {textual && hasAutofix && <button type="button" onClick={p.onClean}>{t.clean}</button>}
         <button type="button" onClick={p.onExportJson}>{t.exportJson}</button>
         <button type="button" onClick={p.onExportPdf}>{t.exportPdf}</button>
-        <button type="button" className="ghost" onClick={p.onReset}>{t.newCheck}</button>
+        <button type="button" className="link" onClick={p.onReset}>{t.newCheck}</button>
       </div>
       {p.notice && <p className="notice" role="status">{p.notice}</p>}
       <div className="report-grid">
         <div className="report-main">
+          {p.diff && <RecheckDiff diff={p.diff} titles={titles} />}
           {textual ? (
-            <HighlightedEditor text={p.text} analyzedText={r.text} onChange={p.onTextChange} sentences={r.sentences} advice={r.advice} activeId={active} />
+            <HighlightedEditor text={p.text} analyzedText={r.text} onChange={p.onTextChange} sentences={r.sentences} advice={r.advice} activeId={active} hidden={hidden} mode={mode} />
           ) : (
             r.image && <ImageReport image={r.image} src={p.imageUrl} />
           )}
           {r.kind === 'document' && <DocumentMetaTable meta={r.document} />}
-          {p.diff && <RecheckDiff diff={p.diff} titles={titles} />}
         </div>
         <aside className="report-side">
-          <ScoreGauge score={r.score} verdict={r.verdict} confidence={r.confidence} loading={p.loading} />
+          <ScoreGauge score={r.score} verdict={r.verdict} confidence={r.confidence} words={words} loading={p.loading} />
+          <AdviceList items={r.advice} activeId={active} onFocus={focus} hidden={hidden} onToggleHidden={toggleHidden} />
           <TopAdvice items={r.advice} onFocus={focus} activeId={active} />
-          <CategoryBreakdown categories={r.categories} />
-          <AdviceList items={r.advice} activeId={active} onFocus={focus} />
-          <MetricList metrics={r.metrics} />
+          <details className="more">
+            <summary>{t.moreStats}</summary>
+            <CategoryBreakdown categories={r.categories} />
+            <MetricList metrics={r.metrics} />
+          </details>
+          <p className="disclaimer">{t.disclaimer}</p>
         </aside>
       </div>
-      <p className="disclaimer">{t.disclaimer}</p>
     </div>
   );
 }

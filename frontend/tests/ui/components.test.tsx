@@ -49,9 +49,14 @@ describe('Advice components', () => {
   it('AdviceCard focuses on click and shows replacements', async () => {
     const onFocus = vi.fn();
     const item = r.advice.find((a) => a.replacements.length) ?? r.advice[0]!;
-    en(<AdviceCard item={item} onFocus={onFocus} active />);
-    await userEvent.click(screen.getByRole('button', { name: item.title }));
-    expect(onFocus).toHaveBeenCalledWith(item);
+    const onToggle = vi.fn();
+    const withSpans = { ...item, spans: [{ start: 0, end: 1, detector: 'L-01' }] };
+    en(<AdviceCard item={withSpans} onFocus={onFocus} onToggleHidden={onToggle} active />);
+    await userEvent.click(screen.getByRole('button', { name: new RegExp(item.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) }));
+    expect(onFocus).toHaveBeenCalledWith(withSpans);
+    expect(screen.getByText(item.explain)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Hide highlights' }));
+    expect(onToggle).toHaveBeenCalled();
   });
 
   it('AdviceList filters by category and effort', async () => {
@@ -75,7 +80,7 @@ describe('Advice components', () => {
 
   it('TopAdvice shows at most three and nothing when empty', () => {
     const { container, rerender } = render(<TopAdvice items={r.advice} />);
-    expect(within(container).getAllByRole('article')).toHaveLength(Math.min(3, r.advice.length));
+    expect(within(container).getAllByRole('listitem')).toHaveLength(Math.min(3, r.advice.length));
     rerender(<TopAdvice items={[]} />);
     expect(container).toBeEmptyDOMElement();
   });

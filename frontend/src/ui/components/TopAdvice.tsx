@@ -6,8 +6,8 @@ export function TopAdvice({ items, onFocus, activeId }: { items: AdviceItem[]; o
   const t = useT();
   if (!items.length) return null;
   return (
-    <section className="card top-advice">
-      <h3>{t.topAdvice}</h3>
+    <section className="top">
+      <h2>{t.topAdvice}</h2>
       <ol>
         {items.slice(0, 3).map((i) => <li key={i.id}><AdviceCard item={i} compact onFocus={onFocus} active={i.id === activeId} /></li>)}
       </ol>

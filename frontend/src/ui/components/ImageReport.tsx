@@ -13,7 +13,7 @@ export function ImageReport({ image, src }: { image: ParsedImage; src?: string }
   if (m.c2pa.present) rows.push(['C2PA', `${m.c2pa.issuers.join(', ') || '?'}${m.c2pa.aiClaim ? ' · trainedAlgorithmicMedia' : ''}`]);
   const heat = image.heatmap;
   return (
-    <section className="card image-report">
+    <section className="block image-report">
       <h3>{t.imageTitle}</h3>
       <div className="image-wrap">
         {src ? <img src={src} alt={t.imageTitle} /> : <div className="image-ph" aria-hidden="true" />}

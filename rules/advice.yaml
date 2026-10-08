@@ -122,7 +122,7 @@ rules:
         - "Merge a pair of neighbouring mid-length sentences with a dash or “because”."
   - id: R-02.no_extremes
     detector: R-02
-    target: sentences
+    target: none
     effort: 2
     expected_gain: 5
     ru:
@@ -156,7 +156,7 @@ rules:
         - "Merge two neighbouring paragraphs if they cover the same point."
   - id: R-04.rhythm
     detector: R-04
-    target: sentences
+    target: none
     effort: 2
     expected_gain: 2
     ru:

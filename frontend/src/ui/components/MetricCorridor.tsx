@@ -30,7 +30,7 @@ export function MetricCorridor({ metric }: { metric: Metric }) {
 export function MetricList({ metrics }: { metrics: Metric[] }) {
   const t = useT();
   return (
-    <section className="card">
+    <section className="block">
       <h3>{t.metricsTitle}</h3>
       {metrics.length ? metrics.map((m) => <MetricCorridor key={m.detector} metric={m} />) : <p className="muted">{t.empty}</p>}
     </section>

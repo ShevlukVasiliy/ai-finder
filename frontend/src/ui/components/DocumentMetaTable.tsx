@@ -9,7 +9,7 @@ export function DocumentMetaTable({ meta }: { meta?: DocumentMeta }) {
     ? KEYS.map((k) => [k, meta[k]] as const).filter(([, v]) => v !== undefined && v !== '' && !(Array.isArray(v) && !v.length))
     : [];
   return (
-    <section className="card">
+    <section className="block">
       <h3>{t.docMeta}</h3>
       {rows.length ? (
         <table className="table">

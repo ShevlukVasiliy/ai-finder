@@ -16,7 +16,9 @@ const P01: Detector<TextContext> = {
     // The most predictable sentences are the ones to rewrite.
     const spans = ss
       .map((s, i) => ({ s, e: ce[i]! }))
-      .filter((x) => x.e < m)
+      .sort((a, b) => a.e - b.e)
+      .slice(0, 3)
+      .sort((a, b) => a.s.start - b.s.start)
       .map((x) => ({ start: x.s.start, end: x.s.end, detector: 'P-01' }));
     return result('P-01', ctx.lang, value, {
       findings: [finding('P-01.low_perplexity', spans, { value, mean: m })],

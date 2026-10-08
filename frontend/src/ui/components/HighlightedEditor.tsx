@@ -67,18 +67,17 @@ export function offsetMapper(text: string): (offset: number) => number {
   };
 }
 
-export function buildHighlights(sentences: SentenceScore[], advice: AdviceItem[], activeId?: string): Highlight[] {
-  const out: Highlight[] = sentences.map((s) => ({
-    start: s.start,
-    end: s.end,
-    className: `sheat sheat-${Math.min(4, Math.floor(s.score * 5))}`,
-  }));
-  for (const a of advice)
+export function buildHighlights(sentences: SentenceScore[], advice: AdviceItem[], activeId?: string, hidden?: Set<string>): Highlight[] {
+  // Sentence heat: only the hottest sentences get a quiet underline; colour fills belong to findings.
+  const out: Highlight[] = sentences
+    .filter((s) => s.score >= 0.6)
+    .map((s) => ({ start: s.start, end: s.end, className: `sheat sheat-${Math.min(4, Math.floor(s.score * 5))}` }));
+  for (const a of advice.filter((x) => !hidden?.has(x.id)))
     for (const sp of a.spans)
       out.push({
         start: sp.start,
         end: sp.end,
-        className: `hl hl-${a.category as Category}${a.id === activeId ? ' hl-active' : ''}`,
+        className: `hl cat-${a.category as Category}${a.id === activeId ? ' hl-active' : ''}`,
         title: a.title,
       });
   return out;
@@ -93,9 +92,12 @@ export interface HighlightedEditorProps {
   readOnly?: boolean;
   /** Text the highlights were computed for (defaults to `text`). */
   analyzedText?: string;
+  hidden?: Set<string>;
+  /** "write" hides all highlights (Hemingway's Write mode). */
+  mode?: 'edit' | 'write';
 }
 
-export function HighlightedEditor({ text, onChange, sentences = [], advice = [], activeId, readOnly, analyzedText }: HighlightedEditorProps) {
+export function HighlightedEditor({ text, onChange, sentences = [], advice = [], activeId, readOnly, analyzedText, hidden, mode = 'edit' }: HighlightedEditorProps) {
   const t = useT();
   const changeRef = useRef(onChange);
   changeRef.current = onChange;
@@ -132,7 +134,10 @@ export function HighlightedEditor({ text, onChange, sentences = [], advice = [],
     if (docToText(editor.state.doc) !== text) editor.commands.setContent(textToDoc(text), { emitUpdate: false });
   }, [editor, text]);
 
-  const highlights = useMemo(() => buildHighlights(sentences, advice, activeId), [sentences, advice, activeId]);
+  const highlights = useMemo(
+    () => (mode === 'write' ? [] : buildHighlights(sentences, advice, activeId, hidden)),
+    [sentences, advice, activeId, hidden, mode],
+  );
 
   useEffect(() => {
     if (!editor) return;
@@ -155,7 +160,7 @@ export function HighlightedEditor({ text, onChange, sentences = [], advice = [],
   }, [editor, activeId, highlights]);
 
   return (
-    <section className="card editor-card">
+    <section className="editor-card">
       <EditorContent editor={editor} />
     </section>
   );

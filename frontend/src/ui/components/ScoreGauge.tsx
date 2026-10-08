@@ -5,41 +5,32 @@ export interface ScoreGaugeProps {
   score?: number;
   verdict?: Report['verdict'];
   confidence?: Report['confidence'];
+  words?: number;
   loading?: boolean;
   error?: string;
 }
 
-export function ScoreGauge({ score, verdict, confidence, loading, error }: ScoreGaugeProps) {
+/** Plain-text score block (Hemingway-style "Grade 8 · Good"), no dials. */
+export function ScoreGauge({ score, verdict, confidence, words, loading, error }: ScoreGaugeProps) {
   const t = useT();
-  if (loading) return <section className="card gauge" aria-busy="true"><div className="skeleton gauge-skel" />{t.loading}</section>;
-  if (error) return <section className="card gauge" role="alert"><strong>{t.error}</strong><p>{error}</p></section>;
-  if (score === undefined || !verdict) return <section className="card gauge muted">{t.empty}</section>;
-  const pct = Math.max(0, Math.min(100, score));
+  if (loading) return <section className="score" aria-busy="true"><p className="muted">{t.loading}</p></section>;
+  if (error) return <section className="score" role="alert"><strong>{t.error}</strong><p>{error}</p></section>;
+  if (score === undefined || !verdict) return <section className="score"><p className="muted">{t.empty}</p></section>;
+  const v = Math.round(Math.max(0, Math.min(100, score)));
   return (
-    <section className={`card gauge v-${verdict}`} aria-label={t.score}>
-      <div className="gauge-label">{t.score}</div>
-      <div className="gauge-row">
-        <span className="gauge-num">{Math.round(pct)}</span>
-        <span className="gauge-of">/100</span>
-      </div>
-      <div className="gauge-scale" role="img" aria-label={`${t.score}: ${Math.round(pct)}`}>
-        <span className="gauge-zone z-human" />
-        <span className="gauge-zone z-mixed" />
-        <span className="gauge-zone z-ai" />
-        <span className="gauge-pin" style={{ left: `${pct}%` }} />
-      </div>
-      <div className="gauge-ticks" aria-hidden="true"><span>0</span><span>35</span><span>65</span><span>100</span></div>
-      <div className="gauge-verdict">{t.verdict[verdict]}</div>
+    <section className="score" aria-label={t.score}>
+      <h2 className="score-title">{t.score}</h2>
+      <p className={`score-value v-${verdict}`} role="img" aria-label={`${t.score}: ${v}`}>
+        <span className="gauge-num">{v}</span> <span className="score-of">/ 100</span>
+      </p>
+      <p className="score-verdict">{t.verdict[verdict]}</p>
       {confidence && (
-        <div className="gauge-conf">
-          <span className={`badge conf-${confidence.level}`} title={confidence.reasons.map((x) => t.confidenceReasons[x] ?? x).join('; ')}>
-            {t.confidence[confidence.level]}
-          </span>
-          {confidence.reasons.length > 0 && (
-            <ul className="conf-reasons">{confidence.reasons.map((x) => <li key={x}>{t.confidenceReasons[x] ?? x}</li>)}</ul>
-          )}
-        </div>
+        <p className="score-conf">
+          <span className={`conf conf-${confidence.level}`}>{t.confidence[confidence.level]}</span>
+          {confidence.reasons.length > 0 && <span className="muted">: {confidence.reasons.map((x) => t.confidenceReasons[x] ?? x).join('; ').toLowerCase()}</span>}
+        </p>
       )}
+      {words !== undefined && <p className="score-words">{t.words}: {words.toLocaleString()}</p>}
     </section>
   );
 }

@@ -27,7 +27,12 @@ const R01: Detector<TextContext> = {
       }
     });
     const m = mean(lens);
-    const spans = ss.filter((s) => Math.abs(s.words.length - m) <= m * 0.25).map((s) => sentenceSpan(s, 'R-01'));
+    // Point at the few most "average" sentences — the ones to split or merge first.
+    const spans = [...ss]
+      .sort((a, b) => Math.abs(a.words.length - m) - Math.abs(b.words.length - m))
+      .slice(0, 3)
+      .sort((a, b) => a.start - b.start)
+      .map((s) => sentenceSpan(s, 'R-01'));
     return result('R-01', ctx.lang, value, {
       findings: [finding('R-01.low_burstiness', spans, { value, para: bestPara + 1 })],
     });

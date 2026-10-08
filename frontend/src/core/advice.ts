@@ -79,7 +79,8 @@ export function buildAdvice(results: DetectorResult[], kind: ContentKind, lang: 
     const ids = members.flatMap((m) => m.detectors);
     const tx = combo[lang];
     const params = { members: members.map((m) => m.title).join('; ') };
-    const spans: Span[] = members.flatMap((m) => m.spans);
+    // Structural combos describe the whole text; highlighting everything would hide the specific findings.
+    const spans: Span[] = [];
     const merged: AdviceItem = {
       id: combo.id,
       detectors: ids,
