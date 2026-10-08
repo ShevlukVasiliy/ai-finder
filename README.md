@@ -34,3 +34,19 @@ pnpm dev
 | `pnpm train` | переобучить n-граммные модели по выдержкам из Википедии |
 
 См. также [docs/DEPLOY.md](docs/DEPLOY.md), [docs/DECISIONS.md](docs/DECISIONS.md), [docs/PROGRESS.md](docs/PROGRESS.md).
+
+## Данные и лицензии
+
+Код распространяется под лицензией MIT (см. `LICENSE`).
+
+В `frontend/tests/quality/external/test.jsonl.gz` лежит выборка из открытых датасетов. Они используются только для калибровки и тестов, лицензии исходных наборов сохраняются:
+
+| Датасет | Лицензия |
+|---|---|
+| [WUJUNCHAO/DetectRL-X](https://huggingface.co/datasets/WUJUNCHAO/DetectRL-X) | MIT |
+| [iis-research-team/AINL-Eval-2025](https://huggingface.co/datasets/iis-research-team/AINL-Eval-2025) | Apache-2.0 |
+| [artnitolog/llm-generated-texts](https://huggingface.co/datasets/artnitolog/llm-generated-texts) | см. карточку датасета |
+| [rasbt/human-vs-ai-50k](https://huggingface.co/datasets/rasbt/human-vs-ai-50k) | лицензии источников указаны построчно (`source_license`) |
+| [Jinyan1/COLING_2025_MGT_multingual](https://huggingface.co/datasets/Jinyan1/COLING_2025_MGT_multingual) | см. карточку датасета (M4, MAGE, RuATD) |
+
+N-граммные модели в `rules/models/` обучены на выдержках из Википедии (CC BY-SA 4.0).
